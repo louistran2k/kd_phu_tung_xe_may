@@ -42,13 +42,12 @@ export class AuthService {
 
     // generate access token & refresh token
     const payload = {
-      id: account.id,
       email: account.email,
     };
     return this.generateToken(payload);
   }
 
-  private async generateToken(payload: { id: string, email: string }) {
+  private async generateToken(payload: { email: string }) {
     const accessToken = await this.jwtService.signAsync(payload);
     const refreshToken = await this.jwtService.signAsync(payload, {
       secret: process.env.JWT_SECRET,

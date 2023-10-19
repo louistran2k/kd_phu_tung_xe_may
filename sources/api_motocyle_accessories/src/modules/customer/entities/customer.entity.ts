@@ -22,13 +22,7 @@ export class CustomerEntity extends BaseEntity {
   @Column({ length: 10, nullable: true })
   phoneNumber: string;
 
-  @PrimaryColumn()
-  email: string;
-
-  @OneToOne(() => AccountEntity, (account) => account.customer)
-  @JoinColumn({
-    name: 'email',
-    referencedColumnName: 'email'
-  })
+  @OneToOne(() => AccountEntity, { cascade: true })
+  @JoinColumn()
   account: AccountEntity;
 }
