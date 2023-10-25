@@ -1,19 +1,21 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn, Unique } from "typeorm";
+import { Column, Entity, OneToOne } from "typeorm";
+import { BaseEntity } from "~common/base";
 import { ERole } from "~enums";
-import { BaseWithoutIdEntity } from "~modules/base/base-without-id.entity";
-import { CustomerEntity } from "~modules/customer/entities/customer.entity";
 
-@Entity('accounts')
-export class AccountEntity extends BaseWithoutIdEntity {
-  @PrimaryColumn()
+@Entity('account')
+export class AccountEntity extends BaseEntity {
+  @Column({ unique: true })
   email: string;
 
-  @Column({ nullable: false })
+  @Column({ type: 'nvarchar', length: 'MAX' })
   password: string;
 
-  @Column({ nullable: false, type: 'text' })
+  @Column({ type: 'nvarchar', length: 'MAX', nullable: true, default: null })
   refreshToken: string;
 
-  @Column({ type: 'enum', enum: ERole, default: ERole.CUSTOMER, nullable: false })
+  @Column({ type: 'tinyint', default: ERole.CUSTOMER })
   role: ERole;
+
+  @Column({ default: true })
+  status: boolean;
 }

@@ -1,0 +1,120 @@
+import { MigrationInterface, QueryRunner } from "typeorm";
+
+export class Init1698200541261 implements MigrationInterface {
+    name = 'Init1698200541261'
+
+    public async up(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.query(`CREATE TABLE "account" ("id" uniqueidentifier NOT NULL CONSTRAINT "DF_54115ee388cdb6d86bb4bf5b2ea" DEFAULT NEWSEQUENTIALID(), "createdAt" datetime2 NOT NULL CONSTRAINT "DF_f50e152d11f027ee500dbad6c9c" DEFAULT getdate(), "updatedAt" datetime2 NOT NULL CONSTRAINT "DF_13af9de5b924749d47952cd1d59" DEFAULT getdate(), "deletedAt" datetime2, "email" nvarchar(255) NOT NULL, "password" nvarchar(MAX) NOT NULL, "refreshToken" nvarchar(MAX) NOT NULL, "role" tinyint NOT NULL CONSTRAINT "DF_a9c1b5266d290363d11489339f9" DEFAULT 1, "status" bit NOT NULL CONSTRAINT "DF_90f9eafb4703666963ae861c26d" DEFAULT 1, CONSTRAINT "UQ_4c8f96ccf523e9a3faefd5bdd4c" UNIQUE ("email"), CONSTRAINT "PK_54115ee388cdb6d86bb4bf5b2ea" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "motorcycle" ("id" uniqueidentifier NOT NULL CONSTRAINT "DF_376a2d7dc14cdf2c1b73fb4049d" DEFAULT NEWSEQUENTIALID(), "createdAt" datetime2 NOT NULL CONSTRAINT "DF_7f88551105e88cc75633fd08f8a" DEFAULT getdate(), "updatedAt" datetime2 NOT NULL CONSTRAINT "DF_45693c63cbc6c78b08a23527024" DEFAULT getdate(), "deletedAt" datetime2, "name" nvarchar(50) NOT NULL, "manufacturerId" uniqueidentifier, CONSTRAINT "UQ_9d1b46ed501f1bde0baeb4e2307" UNIQUE ("name"), CONSTRAINT "PK_376a2d7dc14cdf2c1b73fb4049d" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "product_manufacturer_order" ("productId" uniqueidentifier NOT NULL, "manufacturerOrderId" uniqueidentifier NOT NULL, "quantity" int NOT NULL, "price" float NOT NULL, CONSTRAINT "PK_859187300df4d36db393238989c" PRIMARY KEY ("productId", "manufacturerOrderId"))`);
+        await queryRunner.query(`CREATE TABLE "product_import_card" ("productId" uniqueidentifier NOT NULL, "importCardId" uniqueidentifier NOT NULL, "quantity" int NOT NULL, "price" float NOT NULL, CONSTRAINT "PK_fddcdac7bd9cbd2a62e145b9474" PRIMARY KEY ("productId", "importCardId"))`);
+        await queryRunner.query(`CREATE TABLE "import_card" ("id" uniqueidentifier NOT NULL CONSTRAINT "DF_5f760d955044121bfea66f23dea" DEFAULT NEWSEQUENTIALID(), "createdAt" datetime2 NOT NULL CONSTRAINT "DF_5ed71cf4c04f0b06c3659ccc27f" DEFAULT getdate(), "updatedAt" datetime2 NOT NULL CONSTRAINT "DF_9a208cab3aa0aca65d86f129eaa" DEFAULT getdate(), "deletedAt" datetime2, "importDate" date NOT NULL, "totalPrice" float NOT NULL, "manufacturerOrderId" uniqueidentifier, "staffId" uniqueidentifier, CONSTRAINT "PK_5f760d955044121bfea66f23dea" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE UNIQUE INDEX "REL_0efd783333bacfe5361073e52e" ON "import_card" ("manufacturerOrderId") WHERE "manufacturerOrderId" IS NOT NULL`);
+        await queryRunner.query(`CREATE TABLE "product_customer_order" ("productId" uniqueidentifier NOT NULL, "customerOrderId" uniqueidentifier NOT NULL, "quantity" int NOT NULL, "price" float NOT NULL, "returnQuantity" int NOT NULL, "returnCardId" uniqueidentifier, CONSTRAINT "PK_847d930e2f994c02d137bd255e9" PRIMARY KEY ("productId", "customerOrderId"))`);
+        await queryRunner.query(`CREATE TABLE "return_card" ("id" uniqueidentifier NOT NULL CONSTRAINT "DF_828b50a702a8434ce00e6f0a0ab" DEFAULT NEWSEQUENTIALID(), "createdAt" datetime2 NOT NULL CONSTRAINT "DF_25df4c0814542822829c41e368a" DEFAULT getdate(), "updatedAt" datetime2 NOT NULL CONSTRAINT "DF_55647aefcea912ecf813c7be478" DEFAULT getdate(), "deletedAt" datetime2, "staffId" uniqueidentifier, "invoiceInvoiceNumber" nvarchar(255), CONSTRAINT "PK_828b50a702a8434ce00e6f0a0ab" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "invoice" ("invoiceNumber" nvarchar(255) NOT NULL, "createdAt" datetime2 NOT NULL CONSTRAINT "DF_31aef0453df6db5015712eb2d29" DEFAULT getdate(), CONSTRAINT "PK_d7bed97fb47876e03fd7d7c285a" PRIMARY KEY ("invoiceNumber"))`);
+        await queryRunner.query(`CREATE TABLE "customer" ("id" uniqueidentifier NOT NULL CONSTRAINT "DF_a7a13f4cacb744524e44dfdad32" DEFAULT NEWSEQUENTIALID(), "createdAt" datetime2 NOT NULL CONSTRAINT "DF_6042277b62323ae370b2d796819" DEFAULT getdate(), "updatedAt" datetime2 NOT NULL CONSTRAINT "DF_0d1052d66fcdaf80d9587e4fb7f" DEFAULT getdate(), "deletedAt" datetime2, "firstName" nvarchar(50) NOT NULL, "lastName" nvarchar(50) NOT NULL, "gender" tinyint, "birthDate" date, "address" nvarchar(MAX), "phoneNumber" nvarchar(10) NOT NULL, "accountEmail" nvarchar(255), CONSTRAINT "PK_a7a13f4cacb744524e44dfdad32" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE UNIQUE INDEX "REL_5c09e1ff1b35e778407997f96b" ON "customer" ("accountEmail") WHERE "accountEmail" IS NOT NULL`);
+        await queryRunner.query(`CREATE TABLE "customer_order" ("id" uniqueidentifier NOT NULL CONSTRAINT "DF_c70aef746523b2c4a0af0945209" DEFAULT NEWSEQUENTIALID(), "createdAt" datetime2 NOT NULL CONSTRAINT "DF_57841719a66e88adabac1b553e1" DEFAULT getdate(), "updatedAt" datetime2 NOT NULL CONSTRAINT "DF_5aedaae1ebf544937b25d08fed7" DEFAULT getdate(), "deletedAt" datetime2, "status" tinyint NOT NULL, "receiveAddress" nvarchar(MAX) NOT NULL, "receiveDate" datetime NOT NULL, "receiverName" nvarchar(100) NOT NULL, "receiverPhoneNumber" nvarchar(10) NOT NULL, "totalPrice" float NOT NULL, "approvalStaffId" uniqueidentifier, "deliveryStaffId" uniqueidentifier, "customerId" uniqueidentifier, CONSTRAINT "PK_c70aef746523b2c4a0af0945209" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "product_promotion" ("productId" uniqueidentifier NOT NULL, "promotionId" uniqueidentifier NOT NULL, "percent" int NOT NULL, CONSTRAINT "PK_612cce86c667c1c4977b331b939" PRIMARY KEY ("productId", "promotionId"))`);
+        await queryRunner.query(`CREATE TABLE "promotion" ("id" uniqueidentifier NOT NULL CONSTRAINT "DF_fab3630e0789a2002f1cadb7d38" DEFAULT NEWSEQUENTIALID(), "createdAt" datetime2 NOT NULL CONSTRAINT "DF_07e656ba86fa19f392b2f9fdca1" DEFAULT getdate(), "updatedAt" datetime2 NOT NULL CONSTRAINT "DF_148029b30b7dc77b2423cb9a8e6" DEFAULT getdate(), "deletedAt" datetime2, "name" nvarchar(MAX) NOT NULL, "startAt" datetime NOT NULL, "endAt" datetime NOT NULL, "staffId" uniqueidentifier, CONSTRAINT "PK_fab3630e0789a2002f1cadb7d38" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "staff" ("id" uniqueidentifier NOT NULL CONSTRAINT "DF_e4ee98bb552756c180aec1e854a" DEFAULT NEWSEQUENTIALID(), "createdAt" datetime2 NOT NULL CONSTRAINT "DF_e1d1cbbb31e98e16625555fc037" DEFAULT getdate(), "updatedAt" datetime2 NOT NULL CONSTRAINT "DF_e5b5b978e4e86a0ebe8b8d7de99" DEFAULT getdate(), "deletedAt" datetime2, "firstName" nvarchar(50) NOT NULL, "lastName" nvarchar(50) NOT NULL, "gender" tinyint, "birthDate" datetime, "address" nvarchar(MAX), "phoneNumber" nvarchar(10) NOT NULL, "accountEmail" nvarchar(255), CONSTRAINT "PK_e4ee98bb552756c180aec1e854a" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE UNIQUE INDEX "REL_c66c836304982d0c9f6432cbbb" ON "staff" ("accountEmail") WHERE "accountEmail" IS NOT NULL`);
+        await queryRunner.query(`CREATE TABLE "manufacturer_order" ("id" uniqueidentifier NOT NULL CONSTRAINT "DF_f89886c9f272e5c866fbbb04ddf" DEFAULT NEWSEQUENTIALID(), "createdAt" datetime2 NOT NULL CONSTRAINT "DF_881fd46c21df750880e62d1a326" DEFAULT getdate(), "updatedAt" datetime2 NOT NULL CONSTRAINT "DF_2c073121e877537ab7d9ca09273" DEFAULT getdate(), "deletedAt" datetime2, "orderDate" datetime NOT NULL, "staffId" uniqueidentifier, "manufacturerId" uniqueidentifier, CONSTRAINT "PK_f89886c9f272e5c866fbbb04ddf" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "manufacturer" ("id" uniqueidentifier NOT NULL CONSTRAINT "DF_81fc5abca8ed2f6edc79b375eeb" DEFAULT NEWSEQUENTIALID(), "createdAt" datetime2 NOT NULL CONSTRAINT "DF_22c3444b6f07beab728ca85a763" DEFAULT getdate(), "updatedAt" datetime2 NOT NULL CONSTRAINT "DF_0ea5f598918603d55dbd432d878" DEFAULT getdate(), "deletedAt" datetime2, "name" nvarchar(50) NOT NULL, "address" nvarchar(MAX), "email" nvarchar(255) NOT NULL, "phoneNumber" nvarchar(10) NOT NULL, CONSTRAINT "UQ_a4687de45b74542072a2656b77d" UNIQUE ("name"), CONSTRAINT "PK_81fc5abca8ed2f6edc79b375eeb" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "product_group" ("id" uniqueidentifier NOT NULL CONSTRAINT "DF_8c03e90007cd9645242e594a041" DEFAULT NEWSEQUENTIALID(), "createdAt" datetime2 NOT NULL CONSTRAINT "DF_46096be45605478dd80cc12e96a" DEFAULT getdate(), "updatedAt" datetime2 NOT NULL CONSTRAINT "DF_a2664739f13816f86c82898ae87" DEFAULT getdate(), "deletedAt" datetime2, "name" nvarchar(50) NOT NULL, CONSTRAINT "UQ_3ed948122d6757c9c28ebc7b6db" UNIQUE ("name"), CONSTRAINT "PK_8c03e90007cd9645242e594a041" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "product_type" ("id" uniqueidentifier NOT NULL CONSTRAINT "DF_e0843930fbb8854fe36ca39dae1" DEFAULT NEWSEQUENTIALID(), "createdAt" datetime2 NOT NULL CONSTRAINT "DF_073a735f8659fc92ea0773e825c" DEFAULT getdate(), "updatedAt" datetime2 NOT NULL CONSTRAINT "DF_1778707b41b9450dc09d3c6fce0" DEFAULT getdate(), "deletedAt" datetime2, "name" nvarchar(50) NOT NULL, "groupId" uniqueidentifier, CONSTRAINT "UQ_8978484a9cee7a0c780cd259b88" UNIQUE ("name"), CONSTRAINT "PK_e0843930fbb8854fe36ca39dae1" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "product" ("id" uniqueidentifier NOT NULL CONSTRAINT "DF_bebc9158e480b949565b4dc7a82" DEFAULT NEWSEQUENTIALID(), "createdAt" datetime2 NOT NULL CONSTRAINT "DF_6b71c587b0fd3855fa23b759ca8" DEFAULT getdate(), "updatedAt" datetime2 NOT NULL CONSTRAINT "DF_41bde09db7136dcee687c2b1f05" DEFAULT getdate(), "deletedAt" datetime2, "name" nvarchar(MAX) NOT NULL, "description" nvarchar(MAX) NOT NULL, "images" nvarchar(MAX) NOT NULL, "isNew" bit NOT NULL, "unit" nvarchar(10) NOT NULL, "quantityInStock" int NOT NULL CONSTRAINT "DF_33ada1c1599093ca21309ba421f" DEFAULT 0, "manufacturerId" uniqueidentifier, "typeId" uniqueidentifier, CONSTRAINT "PK_bebc9158e480b949565b4dc7a82" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "change_price" ("productId" uniqueidentifier NOT NULL, "applyDate" datetime NOT NULL, "price" float NOT NULL, "staffId" uniqueidentifier, CONSTRAINT "PK_dbdd6130a3b18c7fb116ca3eba6" PRIMARY KEY ("productId", "applyDate"))`);
+        await queryRunner.query(`CREATE TABLE "product_motorcycle" ("productId" uniqueidentifier NOT NULL, "motorcycleId" uniqueidentifier NOT NULL, CONSTRAINT "PK_ea42d04196e0baa9b8cb068d09c" PRIMARY KEY ("productId", "motorcycleId"))`);
+        await queryRunner.query(`CREATE INDEX "IDX_10e0ba166eca2c0f287ed3b0a3" ON "product_motorcycle" ("productId") `);
+        await queryRunner.query(`CREATE INDEX "IDX_833477003bf03e4eb154a82afd" ON "product_motorcycle" ("motorcycleId") `);
+        await queryRunner.query(`ALTER TABLE "motorcycle" ADD CONSTRAINT "FK_7dbf427e2a50e3b96501efb89df" FOREIGN KEY ("manufacturerId") REFERENCES "manufacturer"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "product_manufacturer_order" ADD CONSTRAINT "FK_6f29fb86a3cf5ea7a0603a0fae9" FOREIGN KEY ("productId") REFERENCES "product"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "product_manufacturer_order" ADD CONSTRAINT "FK_f572b514946d9b304676456049e" FOREIGN KEY ("manufacturerOrderId") REFERENCES "manufacturer_order"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "product_import_card" ADD CONSTRAINT "FK_c013f09ac57f72cef73462d0058" FOREIGN KEY ("productId") REFERENCES "product"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "product_import_card" ADD CONSTRAINT "FK_fd7d8a861ac4c0ade081ffcf55e" FOREIGN KEY ("importCardId") REFERENCES "import_card"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "import_card" ADD CONSTRAINT "FK_0efd783333bacfe5361073e52ec" FOREIGN KEY ("manufacturerOrderId") REFERENCES "manufacturer_order"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "import_card" ADD CONSTRAINT "FK_dce5af71a665a1033ab31840f2a" FOREIGN KEY ("staffId") REFERENCES "staff"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "product_customer_order" ADD CONSTRAINT "FK_8cf7627a2bcde3ab517e24f3fce" FOREIGN KEY ("productId") REFERENCES "product"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "product_customer_order" ADD CONSTRAINT "FK_c99f83772a1329bb802daa60627" FOREIGN KEY ("customerOrderId") REFERENCES "customer_order"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "product_customer_order" ADD CONSTRAINT "FK_d8166da0ed9795d8638536ed23d" FOREIGN KEY ("returnCardId") REFERENCES "return_card"("id") ON DELETE CASCADE ON UPDATE CASCADE`);
+        await queryRunner.query(`ALTER TABLE "return_card" ADD CONSTRAINT "FK_3151747769143824fb0e50b7af1" FOREIGN KEY ("staffId") REFERENCES "staff"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "return_card" ADD CONSTRAINT "FK_e7fa056b73c62a2bd5cb807cba3" FOREIGN KEY ("invoiceInvoiceNumber") REFERENCES "invoice"("invoiceNumber") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "customer" ADD CONSTRAINT "FK_5c09e1ff1b35e778407997f96ba" FOREIGN KEY ("accountEmail") REFERENCES "account"("email") ON DELETE CASCADE ON UPDATE CASCADE`);
+        await queryRunner.query(`ALTER TABLE "customer_order" ADD CONSTRAINT "FK_eb7d53d9cb455fc452cbb0cee85" FOREIGN KEY ("approvalStaffId") REFERENCES "staff"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "customer_order" ADD CONSTRAINT "FK_d64dc65f982178b4560d53f79a9" FOREIGN KEY ("deliveryStaffId") REFERENCES "staff"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "customer_order" ADD CONSTRAINT "FK_703d3a35764b6a3aef6e968d55f" FOREIGN KEY ("customerId") REFERENCES "customer"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "product_promotion" ADD CONSTRAINT "FK_4dd495d81c11ffe2426eda8fc40" FOREIGN KEY ("productId") REFERENCES "product"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "product_promotion" ADD CONSTRAINT "FK_63e85a2b102556bd0c431c5cedb" FOREIGN KEY ("promotionId") REFERENCES "promotion"("id") ON DELETE CASCADE ON UPDATE CASCADE`);
+        await queryRunner.query(`ALTER TABLE "promotion" ADD CONSTRAINT "FK_6ef71aa88100fd349789b8b7af8" FOREIGN KEY ("staffId") REFERENCES "staff"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "staff" ADD CONSTRAINT "FK_c66c836304982d0c9f6432cbbb8" FOREIGN KEY ("accountEmail") REFERENCES "account"("email") ON DELETE CASCADE ON UPDATE CASCADE`);
+        await queryRunner.query(`ALTER TABLE "manufacturer_order" ADD CONSTRAINT "FK_9e7f9b18aaf08d61c9a0b766962" FOREIGN KEY ("staffId") REFERENCES "staff"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "manufacturer_order" ADD CONSTRAINT "FK_8fefdec1a80420bd457bf4e6faa" FOREIGN KEY ("manufacturerId") REFERENCES "manufacturer"("id") ON DELETE CASCADE ON UPDATE CASCADE`);
+        await queryRunner.query(`ALTER TABLE "product_type" ADD CONSTRAINT "FK_c2d58880fc1c47f4fb5f85eef7f" FOREIGN KEY ("groupId") REFERENCES "product_group"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "product" ADD CONSTRAINT "FK_da883f8d02581a40e6059bd7b38" FOREIGN KEY ("manufacturerId") REFERENCES "manufacturer"("id") ON DELETE CASCADE ON UPDATE CASCADE`);
+        await queryRunner.query(`ALTER TABLE "product" ADD CONSTRAINT "FK_53bafe3ecc25867776c07c9e666" FOREIGN KEY ("typeId") REFERENCES "product_type"("id") ON DELETE CASCADE ON UPDATE CASCADE`);
+        await queryRunner.query(`ALTER TABLE "change_price" ADD CONSTRAINT "FK_af8c15b2e6e1e007b5c9bf55b20" FOREIGN KEY ("productId") REFERENCES "product"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "change_price" ADD CONSTRAINT "FK_fb96ea16d4972d307e45c7e2700" FOREIGN KEY ("staffId") REFERENCES "staff"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "product_motorcycle" ADD CONSTRAINT "FK_10e0ba166eca2c0f287ed3b0a3a" FOREIGN KEY ("productId") REFERENCES "product"("id") ON DELETE CASCADE ON UPDATE CASCADE`);
+        await queryRunner.query(`ALTER TABLE "product_motorcycle" ADD CONSTRAINT "FK_833477003bf03e4eb154a82afd9" FOREIGN KEY ("motorcycleId") REFERENCES "motorcycle"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+    }
+
+    public async down(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.query(`ALTER TABLE "product_motorcycle" DROP CONSTRAINT "FK_833477003bf03e4eb154a82afd9"`);
+        await queryRunner.query(`ALTER TABLE "product_motorcycle" DROP CONSTRAINT "FK_10e0ba166eca2c0f287ed3b0a3a"`);
+        await queryRunner.query(`ALTER TABLE "change_price" DROP CONSTRAINT "FK_fb96ea16d4972d307e45c7e2700"`);
+        await queryRunner.query(`ALTER TABLE "change_price" DROP CONSTRAINT "FK_af8c15b2e6e1e007b5c9bf55b20"`);
+        await queryRunner.query(`ALTER TABLE "product" DROP CONSTRAINT "FK_53bafe3ecc25867776c07c9e666"`);
+        await queryRunner.query(`ALTER TABLE "product" DROP CONSTRAINT "FK_da883f8d02581a40e6059bd7b38"`);
+        await queryRunner.query(`ALTER TABLE "product_type" DROP CONSTRAINT "FK_c2d58880fc1c47f4fb5f85eef7f"`);
+        await queryRunner.query(`ALTER TABLE "manufacturer_order" DROP CONSTRAINT "FK_8fefdec1a80420bd457bf4e6faa"`);
+        await queryRunner.query(`ALTER TABLE "manufacturer_order" DROP CONSTRAINT "FK_9e7f9b18aaf08d61c9a0b766962"`);
+        await queryRunner.query(`ALTER TABLE "staff" DROP CONSTRAINT "FK_c66c836304982d0c9f6432cbbb8"`);
+        await queryRunner.query(`ALTER TABLE "promotion" DROP CONSTRAINT "FK_6ef71aa88100fd349789b8b7af8"`);
+        await queryRunner.query(`ALTER TABLE "product_promotion" DROP CONSTRAINT "FK_63e85a2b102556bd0c431c5cedb"`);
+        await queryRunner.query(`ALTER TABLE "product_promotion" DROP CONSTRAINT "FK_4dd495d81c11ffe2426eda8fc40"`);
+        await queryRunner.query(`ALTER TABLE "customer_order" DROP CONSTRAINT "FK_703d3a35764b6a3aef6e968d55f"`);
+        await queryRunner.query(`ALTER TABLE "customer_order" DROP CONSTRAINT "FK_d64dc65f982178b4560d53f79a9"`);
+        await queryRunner.query(`ALTER TABLE "customer_order" DROP CONSTRAINT "FK_eb7d53d9cb455fc452cbb0cee85"`);
+        await queryRunner.query(`ALTER TABLE "customer" DROP CONSTRAINT "FK_5c09e1ff1b35e778407997f96ba"`);
+        await queryRunner.query(`ALTER TABLE "return_card" DROP CONSTRAINT "FK_e7fa056b73c62a2bd5cb807cba3"`);
+        await queryRunner.query(`ALTER TABLE "return_card" DROP CONSTRAINT "FK_3151747769143824fb0e50b7af1"`);
+        await queryRunner.query(`ALTER TABLE "product_customer_order" DROP CONSTRAINT "FK_d8166da0ed9795d8638536ed23d"`);
+        await queryRunner.query(`ALTER TABLE "product_customer_order" DROP CONSTRAINT "FK_c99f83772a1329bb802daa60627"`);
+        await queryRunner.query(`ALTER TABLE "product_customer_order" DROP CONSTRAINT "FK_8cf7627a2bcde3ab517e24f3fce"`);
+        await queryRunner.query(`ALTER TABLE "import_card" DROP CONSTRAINT "FK_dce5af71a665a1033ab31840f2a"`);
+        await queryRunner.query(`ALTER TABLE "import_card" DROP CONSTRAINT "FK_0efd783333bacfe5361073e52ec"`);
+        await queryRunner.query(`ALTER TABLE "product_import_card" DROP CONSTRAINT "FK_fd7d8a861ac4c0ade081ffcf55e"`);
+        await queryRunner.query(`ALTER TABLE "product_import_card" DROP CONSTRAINT "FK_c013f09ac57f72cef73462d0058"`);
+        await queryRunner.query(`ALTER TABLE "product_manufacturer_order" DROP CONSTRAINT "FK_f572b514946d9b304676456049e"`);
+        await queryRunner.query(`ALTER TABLE "product_manufacturer_order" DROP CONSTRAINT "FK_6f29fb86a3cf5ea7a0603a0fae9"`);
+        await queryRunner.query(`ALTER TABLE "motorcycle" DROP CONSTRAINT "FK_7dbf427e2a50e3b96501efb89df"`);
+        await queryRunner.query(`DROP INDEX "IDX_833477003bf03e4eb154a82afd" ON "product_motorcycle"`);
+        await queryRunner.query(`DROP INDEX "IDX_10e0ba166eca2c0f287ed3b0a3" ON "product_motorcycle"`);
+        await queryRunner.query(`DROP TABLE "product_motorcycle"`);
+        await queryRunner.query(`DROP TABLE "change_price"`);
+        await queryRunner.query(`DROP TABLE "product"`);
+        await queryRunner.query(`DROP TABLE "product_type"`);
+        await queryRunner.query(`DROP TABLE "product_group"`);
+        await queryRunner.query(`DROP TABLE "manufacturer"`);
+        await queryRunner.query(`DROP TABLE "manufacturer_order"`);
+        await queryRunner.query(`DROP INDEX "REL_c66c836304982d0c9f6432cbbb" ON "staff"`);
+        await queryRunner.query(`DROP TABLE "staff"`);
+        await queryRunner.query(`DROP TABLE "promotion"`);
+        await queryRunner.query(`DROP TABLE "product_promotion"`);
+        await queryRunner.query(`DROP TABLE "customer_order"`);
+        await queryRunner.query(`DROP INDEX "REL_5c09e1ff1b35e778407997f96b" ON "customer"`);
+        await queryRunner.query(`DROP TABLE "customer"`);
+        await queryRunner.query(`DROP TABLE "invoice"`);
+        await queryRunner.query(`DROP TABLE "return_card"`);
+        await queryRunner.query(`DROP TABLE "product_customer_order"`);
+        await queryRunner.query(`DROP INDEX "REL_0efd783333bacfe5361073e52e" ON "import_card"`);
+        await queryRunner.query(`DROP TABLE "import_card"`);
+        await queryRunner.query(`DROP TABLE "product_import_card"`);
+        await queryRunner.query(`DROP TABLE "product_manufacturer_order"`);
+        await queryRunner.query(`DROP TABLE "motorcycle"`);
+        await queryRunner.query(`DROP TABLE "account"`);
+    }
+
+}
