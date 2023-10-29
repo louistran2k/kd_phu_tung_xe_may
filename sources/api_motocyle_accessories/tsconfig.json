@@ -16,6 +16,13 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "~types": [ "src/types" ],
+      "~enums": [ "src/enums" ],
+      "~modules/*": [ "src/modules/*" ],
+      "~common/*": [ "src/common/*" ],
+      "~shared/*": [ "src/shared/*" ]
+    }
   }
 }
