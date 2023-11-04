@@ -1,4 +1,5 @@
 import axios from 'axios';
+
 import { getAccessToken } from 'utils/storage';
 
 const axiosClient = axios.create({

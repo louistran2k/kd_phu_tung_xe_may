@@ -1,14 +1,14 @@
 import { lazy } from 'react';
 
-const Main = lazy(() => import('pages/Customer/Main'));
-const Cart = lazy(() => import('pages/Customer/Cart'));
-const SignUp = lazy(() => import('pages/Customer/SignUp'));
-const SignIn = lazy(() => import('pages/Customer/SignIn'));
-const Products = lazy(() => import('pages/Customer/Products'));
-const Search = lazy(() => import('pages/Customer/Search'));
-const Checkout = lazy(() => import('pages/Customer/Checkout'));
-const Success = lazy(() => import('pages/Customer/Success'));
-const PurchaseHistory = lazy(() => import('pages/Customer/PurchaseHistory'));
+const Main = lazy(() => import('pages/Main'));
+const Cart = lazy(() => import('pages/Cart'));
+const SignUp = lazy(() => import('pages/SignUp'));
+const SignIn = lazy(() => import('pages/SignIn'));
+const Products = lazy(() => import('pages/Products'));
+const Search = lazy(() => import('pages/Search'));
+const Checkout = lazy(() => import('pages/Checkout'));
+const Success = lazy(() => import('pages/Success'));
+const PurchaseHistory = lazy(() => import('pages/PurchaseHistory'));
 
 export const customerRoutes = [
   {

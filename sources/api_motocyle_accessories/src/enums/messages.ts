@@ -1,0 +1,17 @@
+export enum EErrorMessages {
+  EMAIL_1 = 'Email should not be empty',
+  EMAIL_2 = 'Email must be an email',
+  EMAIL_3 = 'Email already exist',
+  EMAIL_4 = 'Email is not exist',
+  PASSWORD_1 = 'Password should not be empty',
+  PASSWORD_2 = 'Password must be between 8 and 20 characters long',
+  PASSWORD_3 = 'Password is not correct',
+  PHONE_NUMBER_1 = 'Phone number should not be empty',
+  PHONE_NUMBER_2 = 'Phone number must be a valid phone number',
+  FIRST_NAME_1 = 'First name should not be empty',
+  FIRST_NAME_2 = 'First name must be shorter than or equal to 50 characters',
+  LAST_NAME_1 = 'Last name should not be empty',
+  LAST_NAME_2 = 'Last name must be shorter than or equal to 50 characters',
+  ROLE_1 = 'Role should not be empty',
+  REFRESH_TOKEN_1 = 'Refresh token is not valid',
+}

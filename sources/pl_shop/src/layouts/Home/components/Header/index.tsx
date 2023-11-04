@@ -2,8 +2,6 @@ import {
   AppBar,
   Avatar,
   Button,
-  Container,
-  Divider,
   Grid,
   Link,
   Menu,
@@ -12,18 +10,19 @@ import {
 } from '@mui/material';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useState, MouseEvent } from 'react';
+
 import PersonIcon from '@mui/icons-material/Person';
 import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
 import { useStyles } from './style';
 import FacebookOutlinedIcon from '@mui/icons-material/FacebookOutlined';
 import GoogleIcon from '@mui/icons-material/Google';
 import { ParentContainer } from 'GlobalStyle';
-import { useCustomerDispatch, useCustomerSelector } from 'store/Customer/hooks';
-import { getUser } from 'store/Customer/selectors';
+import { useCustomerDispatch, useCustomerSelector } from 'store/hooks';
+import { getUser } from 'store/selectors';
 import {
   logout,
   setIsShowInfo,
-} from 'store/Customer/Home/slice';
+} from 'store/Home';
 import {
   Inventory,
   Logout,
@@ -33,7 +32,7 @@ import {
 
 type Props = {};
 
-function Header({}: Props) {
+function Header({ }: Props) {
   const classes = useStyles();
   const user = useCustomerSelector(getUser);
   const dispatch = useCustomerDispatch();

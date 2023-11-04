@@ -3,31 +3,30 @@ import {
   Grid,
   TextField,
   InputAdornment,
-  Container,
-  Typography,
   Badge,
   debounce,
 } from '@mui/material';
-import { ParentContainer } from 'GlobalStyle';
-import { useState, ChangeEvent, useEffect, useRef } from 'react';
-import Categories from '../Categories';
-import { useStyles } from './style';
+import { ChangeEvent, useRef } from 'react';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import { useNavigate } from 'react-router-dom';
-import { useCustomerDispatch, useCustomerSelector } from 'store/Customer/hooks';
-import { getCart } from 'store/Customer/selectors';
-import { searchByName } from 'store/Customer/Home/thunkActions';
+
+import { ParentContainer } from 'GlobalStyle';
+import Categories from '../Categories';
+import { useStyles } from './style';
+import { useCustomerDispatch, useCustomerSelector } from 'store/hooks';
+import { getCart } from 'store/selectors';
+import { searchByName } from 'store/Home';
 
 type Props = {};
 
-function Navbar({}: Props) {
+function Navbar({ }: Props) {
   const classes = useStyles();
   const navigate = useNavigate();
   const cart = useCustomerSelector(getCart);
   const dispatch = useCustomerDispatch();
 
-  const cartQuantity = cart.reduce((prev, value) => prev + value.quantity, 0);
+  const cartQuantity = cart.reduce((prev: number, value: any) => prev + value.quantity, 0);
 
   const debouncedSearch = useRef(
     debounce((value) => {

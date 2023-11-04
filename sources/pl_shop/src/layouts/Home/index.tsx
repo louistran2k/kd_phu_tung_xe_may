@@ -1,22 +1,17 @@
 import { ThemeProvider } from '@mui/material/styles';
-import NavBar from './components/Navbar';
-import Header from './components/Header';
+import { Container } from '@mui/material';
+import { useEffect } from 'react';
+import { ToastContainer } from 'react-toastify';
+
 import { globalTheme } from '../../themes/HomeTheme';
 import { useStyles } from './style';
-import Logo from 'layouts/Home/components/Logo';
-import { Container } from '@mui/material';
-import { Provider } from 'react-redux';
-import store from 'store/Customer';
-import { useEffect } from 'react';
-import { useCustomerDispatch } from 'store/Customer/hooks';
+import { useCustomerDispatch } from 'store/hooks';
 import {
   getAllProductGroupAsync,
   getAllProductTypeAsync,
-} from 'store/Customer/Home/thunkActions';
-import Main from 'pages/Customer/Main';
-import Footer from './components/Footer';
-import { ToastContainer } from 'react-toastify';
+} from 'store/Home';
 import 'react-toastify/dist/ReactToastify.css';
+import { Footer, Header, Logo, Navbar } from './components';
 
 type Props = {
   children: JSX.Element;
@@ -37,7 +32,7 @@ function CustomerLayout({ children }: Props) {
       <div className={classes.main}>
         <Header />
         <Logo />
-        <NavBar />
+        <Navbar />
         <Container className={classes.content} disableGutters>
           {children}
         </Container>

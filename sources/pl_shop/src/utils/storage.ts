@@ -1,8 +1,8 @@
-import { User } from "types/Customer/home";
+import { User } from "types";
 
-const ACCESS_TOKEN_KEY: string = 'access_token_sharma_shop';
+const ACCESS_TOKEN_KEY: string = 'access_token_pl_shop';
 
-export const setAccessToken = (value: {accessToken: string, user: User}) => {
+export const setAccessToken = (value: { accessToken: string, user: User }) => {
   localStorage.setItem(ACCESS_TOKEN_KEY, JSON.stringify(value));
 };
 

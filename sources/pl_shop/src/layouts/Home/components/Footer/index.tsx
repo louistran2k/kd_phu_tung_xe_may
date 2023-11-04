@@ -5,7 +5,6 @@ import {
   List,
   ListItem,
   ListItemIcon,
-  ListItemText,
   Typography,
 } from '@mui/material';
 import {
@@ -16,6 +15,7 @@ import {
   Google,
   YouTube,
 } from '@mui/icons-material';
+
 import { useStyles } from './style';
 import { LogoFooterImg } from 'assets/images';
 

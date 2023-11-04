@@ -9,7 +9,7 @@ import { AccountEntity } from '~modules/account/entities/account.entity';
 import { ConfigService } from '@nestjs/config';
 import { CustomerEntity } from '~modules/customer/entities/customer.entity';
 import { StaffEntity } from '~modules/staff/entities/staff.entity';
-import { ERole } from '~enums';
+import { EErrorMessages, ERole } from '~enums';
 
 @Injectable()
 export class AuthService {
@@ -24,7 +24,7 @@ export class AuthService {
   async register(registerAccountDto: RegisterDto): Promise<CustomerEntity | StaffEntity> {
     const existAccount = await this.accountRepository.findOneBy({ email: registerAccountDto.email });
     if (existAccount) {
-      throw new HttpException('This email already exist', HttpStatus.BAD_REQUEST);
+      throw new HttpException(EErrorMessages.EMAIL_3, HttpStatus.BAD_REQUEST);
     }
     const hashPassword = await this.hashPassword(registerAccountDto.password);
     const account = await this.accountRepository.save({
@@ -52,14 +52,13 @@ export class AuthService {
         secret: this.configService.get<string>('SECRET')
       });
       const checkExistToken = await this.accountRepository.findOneBy({ email: verify.email, refreshToken });
-      console.log('🚀 ~ file: auth.service.ts:36 ~ checkExistToken:', checkExistToken);
       if (checkExistToken) {
         return this.generateToken({ email: verify.email });
       } else {
-        throw new HttpException('Refresh token is not valid', HttpStatus.BAD_REQUEST);
+        throw new HttpException(EErrorMessages.REFRESH_TOKEN_1, HttpStatus.BAD_REQUEST);
       }
     } catch (error) {
-      throw new HttpException('Refresh token is not valid', HttpStatus.BAD_REQUEST);
+      throw new HttpException(EErrorMessages.REFRESH_TOKEN_1, HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -70,12 +69,12 @@ export class AuthService {
     });
 
     if (!account) {
-      throw new HttpException('Email is not exist', HttpStatus.UNAUTHORIZED);
+      throw new HttpException(EErrorMessages.EMAIL_4, HttpStatus.UNAUTHORIZED);
     }
 
     const checkPass = bcrypt.compareSync(password, account.password);
     if (!checkPass) {
-      throw new HttpException('Password is not correct', HttpStatus.UNAUTHORIZED);
+      throw new HttpException(EErrorMessages.PASSWORD_3, HttpStatus.UNAUTHORIZED);
     }
 
     // generate access token & refresh token

@@ -1,4 +1,3 @@
-import { NoEncryption } from '@mui/icons-material';
 import { Theme } from '@mui/material';
 import { createStyles, makeStyles } from '@mui/styles';
 

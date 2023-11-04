@@ -1,12 +1,13 @@
 import { Container, Grid, Typography } from '@mui/material';
-import { Link as RouterLink} from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
+
 import { ParentContainer } from 'GlobalStyle';
 import { LogoImg, supportImg, paymentImg, freeshipImg } from 'assets/images';
 import { useStyles } from './style';
 
 type Props = {};
 
-function Logo({}: Props) {
+function Logo({ }: Props) {
   const classes = useStyles();
   return (
     <ParentContainer>
