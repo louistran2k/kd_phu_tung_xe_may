@@ -1,9 +1,7 @@
 import { Button, Container, Divider, List, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
-import { convertCurrency } from 'store/Home';
-import { useCustomerSelector } from 'store/hooks';
-import { getCart, getAccessTokenRedux } from 'store/selectors';
+// import { convertCurrency } from 'store/Home';
 import { CartItemType } from 'types';
 import { CartItem } from './components';
 
@@ -17,8 +15,10 @@ export const calcTotalPrices = (cart: CartItemType[]) =>
   }, 0);
 
 const Cart = () => {
-  const cart = useCustomerSelector(getCart);
-  const accessToken = useCustomerSelector(getAccessTokenRedux);
+  const cart = [] as any;
+  const accessToken = '';
+  // const cart = useCustomerSelector(getCart);
+  // const accessToken = useCustomerSelector(getAccessTokenRedux);
   const navigate = useNavigate();
 
   const handleCheckout = () => {
@@ -46,7 +46,7 @@ const Cart = () => {
       )}
       <Container disableGutters style={{ textAlign: 'right' }}>
         <Typography variant="h2">
-          {convertCurrency(calcTotalPrices(cart))}
+          {/* {convertCurrency(calcTotalPrices(cart))} */}
         </Typography>
         <Button
           variant="contained"

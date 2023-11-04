@@ -1,12 +1,23 @@
 import { User } from "types";
 
-const ACCESS_TOKEN_KEY: string = 'access_token_pl_shop';
+const LOCAL_STORAGE_KEY: string = 'pl_shop';
 
-export const setAccessToken = (value: { accessToken: string, user: User }) => {
-  localStorage.setItem(ACCESS_TOKEN_KEY, JSON.stringify(value));
+interface ILocalStorage {
+  accessToken: string;
+  refreshToken: string;
+  user: User;
+  cart: any;
+}
+
+export const setLocalStorage = (value: Partial<ILocalStorage>) => {
+  localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(value));
 };
 
-export const getAccessToken = () => localStorage.getItem(ACCESS_TOKEN_KEY);
+export const getLocalStorage = () => {
+  const storage = localStorage.getItem(LOCAL_STORAGE_KEY);
+  if (!storage) return undefined;
+  return JSON.parse(storage);
+};
 
-export const removeAccessToken = () =>
-  localStorage.removeItem(ACCESS_TOKEN_KEY);
+export const removeLocalStorage = () =>
+  localStorage.removeItem(LOCAL_STORAGE_KEY);

@@ -1,4 +1,4 @@
-import { Button, Container, Dialog, Grid, Typography } from '@mui/material';
+import { Button, Container, Dialog, Typography } from '@mui/material';
 import { ChangeEvent, useEffect, useState } from 'react';
 import Slider from 'react-slick';
 import {
@@ -9,8 +9,7 @@ import {
 
 import { CartItemType, Product } from 'types';
 import viewProductStyles from './style.module.scss';
-import { useCustomerDispatch } from 'store/hooks';
-import { addToCart, convertCurrency } from 'store/Home';
+// import { addToCart, convertCurrency } from 'store/Home';
 import QuantityInput from '../QuantityInput';
 
 type Props = {
@@ -21,7 +20,6 @@ type Props = {
 
 const ViewProduct = ({ product, open, handleClose }: Props) => {
   const [quantity, setQuantity] = useState(product.quantityInStock > 0 ? 1 : 0);
-  const dispatch = useCustomerDispatch();
 
   useEffect(() => {
     setQuantity(product.quantityInStock > 0 ? 1 : 0);
@@ -30,7 +28,7 @@ const ViewProduct = ({ product, open, handleClose }: Props) => {
 
   const settings = {
     customPaging: function (i: number) {
-      return <img src={product.images[i]} />;
+      return <img src={product.images[i]} alt='' />;
     },
     dots: true,
     dotsClass: 'slick-dots slick-thumb',
@@ -66,7 +64,7 @@ const ViewProduct = ({ product, open, handleClose }: Props) => {
       product,
       quantity,
     };
-    dispatch(addToCart(cartItem));
+    // dispatch(addToCart(cartItem));
   };
 
   return (
@@ -105,12 +103,12 @@ const ViewProduct = ({ product, open, handleClose }: Props) => {
             className={`${!!product.discountPercent && 'line-through'
               } product__price`}
           >
-            {convertCurrency(product.price)}
+            {/* {convertCurrency(product.price)} */}
           </span>
           <span> </span>
           {!!product.discountPercent && (
             <span className="product__price">
-              {convertCurrency(product.discountPrice)}
+              {/* {convertCurrency(product.discountPrice)} */}
             </span>
           )}
           <Typography

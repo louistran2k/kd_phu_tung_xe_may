@@ -5,9 +5,8 @@ import clsx from 'clsx';
 import { AddShoppingCart } from '@mui/icons-material';
 import { CartItemType, Product } from 'types';
 import productItemStyles from './style.module.scss';
-import { getProductByIdAsync } from 'store/Home/thunkActions';
-import { useCustomerDispatch } from 'store/hooks';
-import { addToCart, convertCurrency } from 'store/Home/slice';
+// import { getProductByIdAsync } from 'store/Home/thunkActions';
+// import { addToCart, convertCurrency } from 'store/Home/slice';
 
 type Props = {
   product: Product;
@@ -15,12 +14,11 @@ type Props = {
 };
 
 const ProductItem = ({ product, handleClickOpen }: Props) => {
-  const dispatch = useCustomerDispatch();
 
   const handleClickProduct = (e: MouseEvent<HTMLDivElement>) => {
     const element = e.target as Element;
     if (!element.closest('span[class*="product__add-to-cart"]')) {
-      dispatch(getProductByIdAsync(product.productId));
+      // dispatch(getProductByIdAsync(product.productId));
       handleClickOpen();
     }
   };
@@ -30,7 +28,7 @@ const ProductItem = ({ product, handleClickOpen }: Props) => {
       product,
       quantity: 1,
     };
-    dispatch(addToCart(cartItem));
+    // dispatch(addToCart(cartItem));
   };
 
   return (
@@ -52,12 +50,12 @@ const ProductItem = ({ product, handleClickOpen }: Props) => {
           className={`${!!product.discountPercent && 'line-through'
             } product__price`}
         >
-          {convertCurrency(product.price)}
+          {/* {convertCurrency(product.price)} */}
         </span>
         <br />
         {!!product.discountPercent && (
           <span className="product__price">
-            {convertCurrency(product.discountPrice)}
+            {/* {convertCurrency(product.discountPrice)} */}
           </span>
         )}
         <span

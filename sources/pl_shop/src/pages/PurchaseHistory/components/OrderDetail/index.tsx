@@ -14,8 +14,7 @@ import {
 import { format } from 'date-fns';
 
 import { useStyles } from '../../style';
-import { cancelOrderAsync, convertCurrency } from 'store/Home';
-import { useCustomerDispatch } from 'store/hooks';
+// import { cancelOrderAsync, convertCurrency } from 'store/Home';
 import { CustomerOrderDTO, ORDER_STATUS } from 'types';
 
 type Props = {
@@ -25,7 +24,7 @@ type Props = {
 
 export const OrderDetail = ({ orderDetail, handleClose }: Props) => {
   const classes = useStyles();
-  const dispatch = useCustomerDispatch();
+  // const dispatch = useCustomerDispatch();
 
   const total = orderDetail.customerOrderDetails.reduce(
     (prev, cur) => prev + cur.totalPrice,
@@ -33,7 +32,7 @@ export const OrderDetail = ({ orderDetail, handleClose }: Props) => {
   );
 
   const handleCancel = async () => {
-    dispatch(cancelOrderAsync(orderDetail.id));
+    // dispatch(cancelOrderAsync(orderDetail.id));
   };
 
   return (
@@ -162,12 +161,12 @@ export const OrderDetail = ({ orderDetail, handleClose }: Props) => {
                 </TableCell>
                 <TableCell>
                   <Typography variant="body1" style={{ textAlign: 'right' }}>
-                    {convertCurrency(item.totalPrice / item.orderQuantity)}
+                    {/* {convertCurrency(item.totalPrice / item.orderQuantity)} */}
                   </Typography>
                 </TableCell>
                 <TableCell>
                   <Typography variant="body1" style={{ textAlign: 'right' }}>
-                    {convertCurrency(item.totalPrice)}
+                    {/* {convertCurrency(item.totalPrice)} */}
                   </Typography>
                 </TableCell>
               </TableRow>
@@ -179,7 +178,7 @@ export const OrderDetail = ({ orderDetail, handleClose }: Props) => {
             <TableCell></TableCell>
             <TableCell>
               <Typography variant="h5" color="primary">
-                {convertCurrency(total)}
+                {/* {convertCurrency(total)} */}
               </Typography>
             </TableCell>
           </TableRow>

@@ -7,9 +7,9 @@ export const useStyles = makeStyles((theme: Theme) =>
     'sign-up-container': {
       marginTop: 30,
       backgroundColor: textColor2,
-      paddingTop: 24,
-      paddingBottom: 24,
+      padding: 50,
       boxShadow: theme.shadows[3],
+      textAlign: 'center',
 
       '& h4': {
         margin: '10px 0',

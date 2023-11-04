@@ -1,5 +1,4 @@
 import {
-  Button,
   Chip,
   Container,
   Divider,
@@ -12,9 +11,7 @@ import { ChangeEvent, useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import { Link as RouterLink } from 'react-router-dom';
 
-import { fetchNewProducts, fetchFeatureProducts, fetchPromotionalProducts, fetchProductsWithRange, fetchProductsByGroupId, fetchProductsByTypeId } from 'store/Home';
-import { useCustomerSelector, useCustomerDispatch } from 'store/hooks';
-import { getCategories, getProduct } from 'store/selectors';
+// import { fetchNewProducts, fetchFeatureProducts, fetchPromotionalProducts, fetchProductsWithRange, fetchProductsByGroupId, fetchProductsByTypeId } from 'store/Home';
 import { Product, ProductGroup, ProductType, PAGE_MAX } from 'types';
 
 
@@ -22,9 +19,10 @@ import { Product, ProductGroup, ProductType, PAGE_MAX } from 'types';
 const Products = () => {
   const params = useParams();
   const location = useLocation();
-  const categories = useCustomerSelector(getCategories);
-  const dispatch = useCustomerDispatch();
-  const product = useCustomerSelector(getProduct);
+  const categories = [] as any;
+  const product = [] as any;
+  // const categories = useCustomerSelector(getCategories);
+  // const product = useCustomerSelector(getProduct);
 
   const [page, setPage] = useState(1);
   const [open, setOpen] = useState(false);
@@ -42,70 +40,70 @@ const Products = () => {
   let route: string = '';
 
   useEffect(() => {
-    (async () => {
-      let tmp: Product[] = [];
-      if (location.pathname.includes('/new-products')) {
-        const res = await fetchNewProducts();
-        tmp = res.data.map((item: any) => ({
-          ...item,
-          images: item.images.split('|'),
-        }));
-        setTitle('Sản phẩm mới');
-      }
-      if (location.pathname.includes('/feature-products')) {
-        const res = await fetchFeatureProducts();
-        tmp = res.data.map((item: any) => ({
-          ...item,
-          images: item.images.split('|'),
-        }));
-        setTitle('Sản phẩm nổi bật');
-      }
-      if (location.pathname.includes('/promotional-products')) {
-        const res = await fetchPromotionalProducts();
-        tmp = res.data.map((item: any) => ({
-          ...item,
-          images: item.images.split('|'),
-        }));
-        setTitle('Sản phẩm khuyến mãi');
-      }
-      if (location.pathname.includes('/products')) {
-        const res = await fetchProductsWithRange({
-          min: (page - 1) * PAGE_MAX,
-          max: page * PAGE_MAX,
-        });
-        tmp = res.data.map((item: any) => ({
-          ...item,
-          images: item.images.split('|'),
-        }));
-        setTitle('Danh sách sản phẩm');
-      }
-      if (location.pathname.includes('/product-group')) {
-        const res = await fetchProductsByGroupId({
-          groupId: Number(params.productGroupId),
-          min: (page - 1) * PAGE_MAX,
-          max: page * PAGE_MAX,
-        });
-        tmp = res.data.map((item: any) => ({
-          ...item,
-          images: item.images.split('|'),
-        }));
-        setTitle('Danh sách sản phẩm');
-      }
-      if (location.pathname.includes('/product-type')) {
-        const res = await fetchProductsByTypeId({
-          typeId: Number(params.productTypeId),
-          min: (page - 1) * PAGE_MAX,
-          max: page * PAGE_MAX,
-        });
-        tmp = res.data.map((item: any) => ({
-          ...item,
-          images: item.images.split('|'),
-        }));
-        setTitle('Danh sách sản phẩm');
-      }
-      setProducts(tmp);
-    })();
-  }, [page, location.pathname]);
+    // (async () => {
+    //   let tmp: Product[] = [];
+    //   if (location.pathname.includes('/new-products')) {
+    //     const res = await fetchNewProducts();
+    //     tmp = res.data.map((item: any) => ({
+    //       ...item,
+    //       images: item.images.split('|'),
+    //     }));
+    //     setTitle('Sản phẩm mới');
+    //   }
+    //   if (location.pathname.includes('/feature-products')) {
+    //     const res = await fetchFeatureProducts();
+    //     tmp = res.data.map((item: any) => ({
+    //       ...item,
+    //       images: item.images.split('|'),
+    //     }));
+    //     setTitle('Sản phẩm nổi bật');
+    //   }
+    //   if (location.pathname.includes('/promotional-products')) {
+    //     const res = await fetchPromotionalProducts();
+    //     tmp = res.data.map((item: any) => ({
+    //       ...item,
+    //       images: item.images.split('|'),
+    //     }));
+    //     setTitle('Sản phẩm khuyến mãi');
+    //   }
+    //   if (location.pathname.includes('/products')) {
+    //     const res = await fetchProductsWithRange({
+    //       min: (page - 1) * PAGE_MAX,
+    //       max: page * PAGE_MAX,
+    //     });
+    //     tmp = res.data.map((item: any) => ({
+    //       ...item,
+    //       images: item.images.split('|'),
+    //     }));
+    //     setTitle('Danh sách sản phẩm');
+    //   }
+    //   if (location.pathname.includes('/product-group')) {
+    //     const res = await fetchProductsByGroupId({
+    //       groupId: Number(params.productGroupId),
+    //       min: (page - 1) * PAGE_MAX,
+    //       max: page * PAGE_MAX,
+    //     });
+    //     tmp = res.data.map((item: any) => ({
+    //       ...item,
+    //       images: item.images.split('|'),
+    //     }));
+    //     setTitle('Danh sách sản phẩm');
+    //   }
+    //   if (location.pathname.includes('/product-type')) {
+    //     const res = await fetchProductsByTypeId({
+    //       typeId: Number(params.productTypeId),
+    //       min: (page - 1) * PAGE_MAX,
+    //       max: page * PAGE_MAX,
+    //     });
+    //     tmp = res.data.map((item: any) => ({
+    //       ...item,
+    //       images: item.images.split('|'),
+    //     }));
+    //     setTitle('Danh sách sản phẩm');
+    //   }
+    //   setProducts(tmp);
+    // })();
+  }, [page, location.pathname, params.productGroupId, params.productTypeId]);
 
   if (!!params?.productGroupId) {
     const tmp = categories.find(

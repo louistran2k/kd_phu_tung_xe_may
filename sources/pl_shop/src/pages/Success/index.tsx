@@ -22,7 +22,7 @@ const Success = () => {
         throw new Error(String(error));
       }
     })();
-  }, []);
+  }, [searchParams]);
 
   return <Typography variant="h5">Thanh toán thành công</Typography>;
 };

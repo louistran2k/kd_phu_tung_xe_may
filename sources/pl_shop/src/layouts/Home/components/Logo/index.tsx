@@ -7,7 +7,7 @@ import { useStyles } from './style';
 
 type Props = {};
 
-function Logo({ }: Props) {
+function Logo(props: Props) {
   const classes = useStyles();
   return (
     <ParentContainer>

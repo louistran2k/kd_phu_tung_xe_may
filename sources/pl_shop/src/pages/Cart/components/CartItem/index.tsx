@@ -2,8 +2,7 @@ import { Grid, ListItem, Typography } from '@mui/material';
 import { ChangeEvent } from 'react';
 
 import { QuantityInput } from 'common/components';
-import { setQuantityCartItem, convertCurrency } from 'store/Home';
-import { useCustomerDispatch } from 'store/hooks';
+// import { setQuantityCartItem, convertCurrency } from 'store/Home';
 import { CartItemType } from 'types';
 
 type Props = {
@@ -18,7 +17,7 @@ export const calcTotalPrice = (cartItem: CartItemType) => {
 };
 
 export const CartItem = ({ cartItem }: Props) => {
-  const dispatch = useCustomerDispatch();
+  // const dispatch = useCustomerDispatch();
   const handleIncrease = () => {
     const tmp = {
       productId: cartItem.product.productId,
@@ -27,7 +26,7 @@ export const CartItem = ({ cartItem }: Props) => {
           ? cartItem.quantity + 1
           : cartItem.quantity,
     };
-    dispatch(setQuantityCartItem(tmp));
+    // dispatch(setQuantityCartItem(tmp));
   };
   const handleDecrease = () => {
     const tmp = {
@@ -35,7 +34,7 @@ export const CartItem = ({ cartItem }: Props) => {
       quantity:
         cartItem.quantity > 0 ? cartItem.quantity - 1 : cartItem.quantity,
     };
-    dispatch(setQuantityCartItem(tmp));
+    // dispatch(setQuantityCartItem(tmp));
   };
   const handleChangeQuantity = (e: ChangeEvent<HTMLInputElement>) => {
     const value = Number(e.target.value);
@@ -46,7 +45,7 @@ export const CartItem = ({ cartItem }: Props) => {
           ? cartItem.product.quantityInStock
           : value,
     };
-    dispatch(setQuantityCartItem(tmp));
+    // dispatch(setQuantityCartItem(tmp));
   };
 
   return (
@@ -55,9 +54,9 @@ export const CartItem = ({ cartItem }: Props) => {
         <Grid item xs={9}>
           <Typography variant="h4">{cartItem.product.name}</Typography>
           <Typography variant="subtitle1">
-            {cartItem.product.discountPrice > 0
+            {/* {cartItem.product.discountPrice > 0
               ? convertCurrency(cartItem.product.discountPrice)
-              : convertCurrency(cartItem.product.price)}
+              : convertCurrency(cartItem.product.price)} */}
           </Typography>
         </Grid>
         <Grid item xs={3}>
@@ -69,7 +68,7 @@ export const CartItem = ({ cartItem }: Props) => {
             handleChangeQuantity={handleChangeQuantity}
           />
           <Typography variant="subtitle1">
-            {convertCurrency(calcTotalPrice(cartItem))}
+            {/* {convertCurrency(calcTotalPrice(cartItem))} */}
           </Typography>
         </Grid>
       </Grid>

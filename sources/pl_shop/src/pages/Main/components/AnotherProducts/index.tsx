@@ -9,8 +9,6 @@ import {
 
 import { useStyles } from '../ProductSection/style';
 import { ProductItem } from 'common/components';
-import { useCustomerSelector } from 'store/hooks';
-import { getAnotherProducts } from 'store/selectors';
 
 type Props = {
   handleClickOpen: () => void;
@@ -19,7 +17,8 @@ type Props = {
 export const AnotherProducts = ({ handleClickOpen }: Props) => {
   const classes = useStyles();
 
-  const anotherProducts = useCustomerSelector(getAnotherProducts);
+  const anotherProducts = [] as any;
+  // const anotherProducts = useCustomerSelector(getAnotherProducts);
 
   return (
     <Container component="div" disableGutters className={classes.section} style={{ paddingBottom: '20px' }}>

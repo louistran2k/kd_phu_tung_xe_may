@@ -20,9 +20,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { FixedSizeList, ListChildComponentProps } from 'react-window';
 
 import { useStyles } from './style';
-import { setIsShowPurchaseDetail, convertCurrency, getMyOrdersAsync } from 'store/Home';
-import { useCustomerDispatch, useCustomerSelector } from 'store/hooks';
-import { getUser, getMyOrders, isShowPurchaseDetail, getOrderId } from 'store/selectors';
+// import { setIsShowPurchaseDetail, convertCurrency, getMyOrdersAsync } from 'store/Home';
 import { CustomerOrderDTO, ORDER_STATUS } from 'types';
 import { OrderDetail } from './components';
 
@@ -31,10 +29,10 @@ const RenderRow = (props: ListChildComponentProps) => {
 
   const item: CustomerOrderDTO = data[index];
 
-  const dispatch = useCustomerDispatch();
+  // const dispatch = useCustomerDispatch();
 
   const handleViewDetail = () => {
-    dispatch(setIsShowPurchaseDetail(item.id));
+    // dispatch(setIsShowPurchaseDetail(item.id));
   };
 
   return (
@@ -68,7 +66,7 @@ const RenderRow = (props: ListChildComponentProps) => {
         )}
       </div>
       <Typography variant="body1" style={{ width: '18%', textAlign: 'center' }}>
-        {convertCurrency(item.totalPrice)}
+        {/* {convertCurrency(item.totalPrice)} */}
       </Typography>
       <Typography variant="body1" style={{ width: '10%', textAlign: 'center' }}>
         <IconButton onClick={handleViewDetail}>
@@ -83,25 +81,29 @@ const RenderRow = (props: ListChildComponentProps) => {
 
 const PurchaseHistory = () => {
   const classes = useStyles();
-  const dispatch = useCustomerDispatch();
-  const user = useCustomerSelector(getUser);
-  const myOrders = useCustomerSelector(getMyOrders);
-  const showPurchaseDetail = useCustomerSelector(isShowPurchaseDetail);
-  const orderId = useCustomerSelector(getOrderId);
+  // const dispatch = useCustomerDispatch();
+  // const user = useCustomerSelector(getUser);
+  // const myOrders = useCustomerSelector(getMyOrders);
+  // const showPurchaseDetail = useCustomerSelector(isShowPurchaseDetail);
+  // const orderId = useCustomerSelector(getOrderId);
+  const user = {} as any;
+  const myOrders = [] as any;
+  const showPurchaseDetail = false;
+  const orderId = '';
   const [filter, setFilter] = useState(-1);
 
   useEffect(() => {
-    dispatch(
-      getMyOrdersAsync({
-        citizenIdentification: user.citizenIdentification,
-        status: filter,
-      })
-    );
-  }, [filter]);
+    // dispatch(
+    //   getMyOrdersAsync({
+    //     citizenIdentification: user.citizenIdentification,
+    //     status: filter,
+    //   })
+    // );
+  }, [filter, user.citizenIdentification]);
 
   const orderDetail = useMemo(
     () => myOrders.find((item: any) => item.id === orderId),
-    [orderId]
+    [orderId, myOrders]
   );
 
   const handleFilter = (e: SelectChangeEvent) => {
@@ -109,7 +111,7 @@ const PurchaseHistory = () => {
   };
 
   const handleClose = () => {
-    dispatch(setIsShowPurchaseDetail(-1));
+    // dispatch(setIsShowPurchaseDetail(-1));
   };
 
   return (

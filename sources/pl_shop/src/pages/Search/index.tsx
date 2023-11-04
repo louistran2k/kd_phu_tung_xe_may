@@ -2,12 +2,12 @@ import { Container, Grid, Divider, Typography } from '@mui/material';
 import { useState } from 'react';
 
 import { ViewProduct, ProductItem } from 'common/components';
-import { useCustomerSelector } from 'store/hooks';
-import { getProduct, getSearch } from 'store/selectors';
 
 const Search = () => {
-  const product = useCustomerSelector(getProduct);
-  const search = useCustomerSelector(getSearch);
+  const product = {} as any;
+  const search = [] as any;
+  // const product = useCustomerSelector(getProduct);
+  // const search = useCustomerSelector(getSearch);
   const [open, setOpen] = useState(false);
   const handleClickOpen = () => {
     setOpen(true);

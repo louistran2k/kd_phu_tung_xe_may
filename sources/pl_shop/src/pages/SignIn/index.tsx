@@ -4,41 +4,34 @@ import {
   InputAdornment,
   TextField,
   Typography,
+  useTheme,
 } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
 import { useState } from 'react';
 import { VisibilityOff, Visibility } from '@mui/icons-material';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { useStyles } from './style';
-import { signIn } from 'store/Home';
-import { useCustomerDispatch } from 'store/hooks';
 import { ISignIn } from 'types';
+import { signInSchema } from 'utils/schemas';
+import { connect, ConnectedProps } from 'react-redux';
+import { AppState, AppDispatch } from 'store';
+import { login } from 'store/user/thunkApi';
+import { EStatusCode } from 'enums';
 
-const schema = yup.object().shape({
-  username: yup
-    .string()
-    .required('Đây là trường bắt buộc')
-    .min(6, 'Tên tài khoản phải có số ký tự lớn hơn 6'),
-  password: yup
-    .string()
-    .required('Đây là trường bắt buộc')
-    .min(6, 'Mật khẩu phải có số ký tự lớn hơn 6'),
-});
-
-const SignIn = () => {
+const SignIn = ({ pLogin }: PropsFromStore) => {
   const classes = useStyles();
-  const dispatch = useCustomerDispatch();
   const navigate = useNavigate();
+  const theme = useTheme();
 
   const {
     register,
     formState: { isValid, errors },
+    setError,
     handleSubmit,
   } = useForm<ISignIn>({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(signInSchema),
     mode: 'all',
   });
 
@@ -48,11 +41,16 @@ const SignIn = () => {
   };
 
   const onSubmit = async (data: ISignIn) => {
-    const res = await dispatch(signIn(data));
-    navigate(-1);
-    // if (!!res.payload) {
-    //   navigate('/checkout');
-    // }
+    const res = await pLogin(data);
+    if (res.meta.requestStatus === 'fulfilled') {
+      navigate('/');
+    }
+    const payload: any = res.payload;
+    if (payload?.statusCode === EStatusCode.UNAUTHORIZED && payload?.message) {
+      Object.entries(payload?.message).forEach(([key, value]) => {
+        setError(key as keyof ISignIn, { message: value } as any)
+      });
+    }
   };
 
   return (
@@ -67,7 +65,7 @@ const SignIn = () => {
           <TextField
             type="text"
             variant="outlined"
-            label="Tên tài khoản"
+            label="Email"
             color="secondary"
             required
             fullWidth
@@ -76,9 +74,9 @@ const SignIn = () => {
               minLength: 6,
               maxLength: 20,
             }}
-            {...register('username')}
-            error={!!errors.username}
-            helperText={errors.username?.message ?? ''}
+            {...register('email')}
+            error={!!errors.email}
+            helperText={errors.email?.message ?? ''}
           />
           <TextField
             type={showPassword ? 'type' : 'password'}
@@ -117,9 +115,24 @@ const SignIn = () => {
             Đăng nhập
           </Button>
         </form>
+        <Typography variant="body1" sx={{ marginTop: 3 }}>
+          Chưa có tài khoản?
+          <Link to='/sign-in' style={{ marginLeft: 5, color: theme.palette.info.main }}>Đăng ký</Link>
+        </Typography>
       </Grid>
     </Grid>
   );
 };
 
-export default SignIn;
+const mapStateToProps = (state: AppState) => ({
+});
+
+const mapDispatchToProps = (dispatch: AppDispatch) => ({
+  pLogin: (params: ISignIn) => dispatch(login(params)),
+});
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type PropsFromStore = ConnectedProps<typeof connector>;
+
+export default connector(SignIn);

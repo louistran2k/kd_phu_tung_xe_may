@@ -1,16 +1,10 @@
 import { Container } from '@mui/material';
 import { useEffect, useState } from 'react';
 
-import { ViewProduct } from 'common/components';
-import { getPromotionalProductsAsync, getNewProductsAsync, getFeatureProductsAsync, getRandomProductsAsync } from 'store/Home';
-import { useCustomerDispatch, useCustomerSelector } from 'store/hooks';
-import { getNewProducts, getPromotionalProducts, getFeatureProducts, getProduct } from 'store/selectors';
 import { ProductSectionProps, ProductSection, AnotherProducts } from './components';
 
 
 function Main() {
-  const dispatch = useCustomerDispatch();
-
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
@@ -21,20 +15,13 @@ function Main() {
     setOpen(false);
   };
 
-  useEffect(() => {
-    dispatch(getPromotionalProductsAsync(10));
-    dispatch(getNewProductsAsync(10));
-    dispatch(getFeatureProductsAsync(10));
-    dispatch(getRandomProductsAsync());
-  }, []);
-
-  const newProducts = useCustomerSelector(getNewProducts);
-  const promotionalProducts = useCustomerSelector(getPromotionalProducts);
-  const featureProducts = useCustomerSelector(getFeatureProducts);
+  const newProducts = [] as any;
+  const promotionalProducts = [] as any;
+  const featureProducts = [] as any;
   const newProductsProps: ProductSectionProps = {
     title: 'Sản phẩm mới',
     link: '/new-products',
-    list: newProducts,
+    list: newProducts as any,
     handleClickOpen: handleClickOpen,
   };
   const promotionalProductsProps: ProductSectionProps = {
@@ -50,13 +37,13 @@ function Main() {
     handleClickOpen: handleClickOpen,
   };
 
-  const product = useCustomerSelector(getProduct);
+  const product = {};
 
   return (
     <>
-      {open && (
+      {/* {open && (
         <ViewProduct product={product} open={open} handleClose={handleClose} />
-      )}
+      )} */}
       <Container disableGutters>
         {!!newProducts.length && <ProductSection {...newProductsProps} />}
         {!!promotionalProducts.length && (

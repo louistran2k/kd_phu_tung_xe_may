@@ -1,3 +1,5 @@
+import { User } from "./user";
+
 export interface HomeState {
   categories: ProductGroup[];
   newProducts: Product[];
@@ -68,39 +70,7 @@ export interface CartItemType {
   quantity: number;
 }
 
-export interface ISignUp {
-  username: string;
-  password: string;
-  passwordConfirmation: string;
-  citizenIdentification: string;
-  firstName: string;
-  lastName: string;
-  gender: boolean;
-  dateOfBirth: Date | null;
-  address: string;
-  email: string;
-  phoneNumber: string;
-  taxCode: string;
-}
-
-export interface ISignIn {
-  username: string;
-  password: string;
-}
-
 export const PAGE_MAX = 16;
-
-export interface User {
-  citizenIdentification: string;
-  firstName: string;
-  lastName: string;
-  gender: number | null;
-  dateOfBirth: Date | null;
-  address: string;
-  email: string;
-  phoneNumber: string;
-  taxCode: string;
-}
 
 export interface CustomerOrder {
   receiverFullName: string;

@@ -18,9 +18,7 @@ import {
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { axiosClientWithToken } from 'api/axiosClient';
 import * as yup from 'yup';
-import { convertCurrency } from 'store/Home';
-import { useCustomerSelector, useCustomerDispatch } from 'store/hooks';
-import { getAccessTokenRedux, getCart, getUser } from 'store/selectors';
+// import { convertCurrency } from 'store/Home';
 import { CustomerOrder, ProductCheckoutReq } from 'types';
 import { calcTotalPrices } from 'pages/Cart';
 import { calcTotalPrice } from 'pages/Cart/components';
@@ -42,11 +40,13 @@ const schema = yup.object().shape({
 });
 
 const Checkout = () => {
-  const accessToken = useCustomerSelector(getAccessTokenRedux);
   const navigate = useNavigate();
-  const cart = useCustomerSelector(getCart);
-  const dispatch = useCustomerDispatch();
-  const user = useCustomerSelector(getUser);
+  const accessToken = '';
+  const cart = [] as any;
+  const user = {} as any;
+  // const accessToken = useCustomerSelector(getAccessTokenRedux);
+  // const cart = useCustomerSelector(getCart);
+  // const user = useCustomerSelector(getUser);
 
   const {
     register,
@@ -68,7 +68,7 @@ const Checkout = () => {
     if (!accessToken) {
       navigate('/sign-in');
     }
-  }, []);
+  }, [accessToken, navigate]);
 
   const onSubmit = async (data: CustomerOrder) => {
     const customerOrder: CustomerOrder = {
@@ -203,9 +203,9 @@ const Checkout = () => {
                     <Grid item xs={9}>
                       <Typography variant="h4">{item.product.name}</Typography>
                       <Typography variant="subtitle1">
-                        {item.product.discountPrice > 0
+                        {/* {item.product.discountPrice > 0
                           ? convertCurrency(item.product.discountPrice)
-                          : convertCurrency(item.product.price)}
+                          : convertCurrency(item.product.price)} */}
                       </Typography>
                     </Grid>
                     <Grid item xs={3}>
@@ -213,7 +213,7 @@ const Checkout = () => {
                         {`x${item.quantity}`}
                       </Typography>
                       <Typography variant="subtitle1">
-                        {convertCurrency(calcTotalPrices(item))}
+                        {/* {convertCurrency(calcTotalPrices(item))} */}
                       </Typography>
                     </Grid>
                   </Grid>

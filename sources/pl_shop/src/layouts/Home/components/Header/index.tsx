@@ -10,32 +10,26 @@ import {
 } from '@mui/material';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useState, MouseEvent } from 'react';
-
 import PersonIcon from '@mui/icons-material/Person';
 import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
 import { useStyles } from './style';
 import FacebookOutlinedIcon from '@mui/icons-material/FacebookOutlined';
 import GoogleIcon from '@mui/icons-material/Google';
-import { ParentContainer } from 'GlobalStyle';
-import { useCustomerDispatch, useCustomerSelector } from 'store/hooks';
-import { getUser } from 'store/selectors';
-import {
-  logout,
-  setIsShowInfo,
-} from 'store/Home';
 import {
   Inventory,
   Logout,
   MoreVert,
   PersonOutline,
 } from '@mui/icons-material';
+import { ParentContainer } from 'GlobalStyle';
+import { connect, ConnectedProps } from 'react-redux';
+import { sGetUserDetails } from 'store/user/selectors';
 
-type Props = {};
+import { AppDispatch, AppState } from 'store';
+import { logout } from 'store/user';
 
-function Header({ }: Props) {
+const Header = ({ user, pLogout }: PropsFromStore) => {
   const classes = useStyles();
-  const user = useCustomerSelector(getUser);
-  const dispatch = useCustomerDispatch();
   const navigate = useNavigate();
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -48,12 +42,12 @@ function Header({ }: Props) {
   };
 
   const handleLogout = () => {
-    dispatch(logout());
+    pLogout();
     navigate(0);
   };
 
   const handleShowInfo = () => {
-    dispatch(setIsShowInfo());
+    // dispatch(setIsShowInfo());
     handleClose();
   };
 
@@ -84,7 +78,7 @@ function Header({ }: Props) {
               <GoogleIcon />
             </Link>
           </Grid>
-          {user.citizenIdentification ? (
+          {user?.id ? (
             <div
               style={{
                 display: 'flex',
@@ -93,7 +87,7 @@ function Header({ }: Props) {
               }}
             >
               <Avatar style={{ width: '30px', height: '30px' }}>
-                {user.lastName.substring(0, 1)}
+                {user.firstName.substring(0, 1)}
               </Avatar>
               <Typography
                 style={{ marginLeft: 10 }}
@@ -151,4 +145,16 @@ function Header({ }: Props) {
   );
 }
 
-export default Header;
+const mapStateToProps = (state: AppState) => ({
+  user: sGetUserDetails(state),
+});
+
+const mapDispatchToProps = (dispatch: AppDispatch) => ({
+  pLogout: () => dispatch(logout()),
+});
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type PropsFromStore = ConnectedProps<typeof connector>;
+
+export default connector(Header);

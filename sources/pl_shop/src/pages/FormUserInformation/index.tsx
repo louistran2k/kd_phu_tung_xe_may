@@ -28,7 +28,7 @@ const FormUserInformation = ({ isEdit, isUpdate }: Props) => {
 
   return (
     <Grid item xs={8}>
-      <Grid container spacing={2}>
+      {/* <Grid container spacing={2}>
         <Grid item xs={4}>
           <TextField
             type="text"
@@ -211,7 +211,7 @@ const FormUserInformation = ({ isEdit, isUpdate }: Props) => {
             helperText={errors.taxCode?.message ?? ''}
           />
         </Grid>
-      </Grid>
+      </Grid> */}
     </Grid>
   );
 };

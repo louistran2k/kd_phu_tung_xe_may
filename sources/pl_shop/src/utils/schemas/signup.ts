@@ -1,43 +1,28 @@
 import * as yup from 'yup';
+import { EErrorMessage } from 'enums';
 import { digitsOnly } from 'utils/helper';
 
 export const schemaSignUp = yup.object().shape({
-  username: yup
-    .string()
-    .required('Đây là trường bắt buộc')
-    .min(6, 'Tên tài khoản phải có số ký tự lớn hơn 6'),
-  password: yup
-    .string()
-    .required('Đây là trường bắt buộc')
-    .min(6, 'Mật khẩu phải có số ký tự lớn hơn 6'),
-  passwordConfirmation: yup
-    .string()
-    .required('Đây là trường bắt buộc')
-    .min(6, 'Mật khẩu phải có số ký tự lớn hơn 6')
-    .oneOf([yup.ref('password'), null], 'Mật khẩu không trùng khớp'),
-  citizenIdentification: yup
-    .string()
-    .required('Đây là trường bắt buộc')
-    .length(12, 'CCCD phải là 12 số')
-    .test('Digits only', 'CCCD chỉ bao gồm ký tự số', digitsOnly),
-  firstName: yup.string().required('Đây là trường bắt buộc'),
-  lastName: yup.string().required('Đây là trường bắt buộc'),
-  gender: yup.number(),
-  dateOfBirth: yup.date().nullable(),
-  address: yup.string(),
   email: yup
     .string()
-    .required('Đây là trường bắt buộc')
-    .email('Email không đúng định dạng'),
+    .required(EErrorMessage.REQUIRED)
+    .email(EErrorMessage.EMAIL_1),
+  password: yup
+    .string()
+    .required(EErrorMessage.REQUIRED)
+    .min(8, EErrorMessage.PASSWORD_1)
+    .max(20, EErrorMessage.PASSWORD_1),
+  passwordConfirmation: yup
+    .string()
+    .required(EErrorMessage.REQUIRED)
+    .min(8, EErrorMessage.PASSWORD_1)
+    .max(20, EErrorMessage.PASSWORD_1)
+    .oneOf([yup.ref('password'), null], EErrorMessage.CONFIRM_PASSWORD),
+  firstName: yup.string().required(EErrorMessage.REQUIRED),
+  lastName: yup.string().required(EErrorMessage.REQUIRED),
   phoneNumber: yup
     .string()
-    .required('Đây là trường bắt buộc')
-    .length(10, 'Số điện thoại phải là 10 số')
-    .test('Digits only', 'Số điện thoại chỉ bao gồm ký tự số', digitsOnly),
-  taxCode: yup
-    .string()
-    .required('Đây là trường bắt buộc')
-    .min(10, 'Mã số thuế có ít nhất 10 kí tự')
-    .max(13, 'Mã số thuế có nhiều nhất 13 kí tự')
-    .test('Digits only', 'Mã số thuế chỉ bao gồm ký tự số', digitsOnly),
+    .required(EErrorMessage.REQUIRED)
+    .length(10, EErrorMessage.PHONE_NUMBER)
+    .test('Digits only', EErrorMessage.PHONE_NUMBER, digitsOnly),
 });

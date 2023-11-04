@@ -1,18 +1,13 @@
-import { configureStore } from '@reduxjs/toolkit';
-import homeReducer from './Home/slice';
+import { configureStore } from "@reduxjs/toolkit";
+import rootReducer, { combinedReducer } from "./rootReducer";
 
-const customerReducer = {
-  homeReducer,
-};
-
-const store = configureStore({
-  reducer: customerReducer,
+export const store = configureStore({
+  reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: false,
-    }),
+      serializableCheck: false
+    })
 });
 
-export type CustomerState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
-export default store;
+export type AppState = ReturnType<typeof combinedReducer>;

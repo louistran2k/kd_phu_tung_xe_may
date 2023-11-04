@@ -52,7 +52,7 @@ export const ProductSection = ({
       <Slider {...settings}>
         {list.map((item: Product, index) => (
           <div key={index} style={{ width: `${list.length < 5 && 20}%` }}>
-            <ProductItem product={item} handleClickOpen={handleClickOpen} />
+            {/* <ProductItem product={item} handleClickOpen={handleClickOpen} /> */}
           </div>
         ))}
       </Slider>

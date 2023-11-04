@@ -13,20 +13,19 @@ import { useState } from 'react';
 import { Edit } from '@mui/icons-material';
 import { useStyles } from './style';
 import FormUserInformation from 'pages/FormUserInformation';
-import { setIsShowInfo, updateUserInformation } from 'store/Home';
-import { useCustomerSelector, useCustomerDispatch } from 'store/hooks';
-import { isShowInfo, getUser } from 'store/selectors';
 import { User } from 'types';
 import { schemaUserInformation } from 'utils/schemas';
 
 const MyInformationDialog = () => {
   const classes = useStyles();
-  const showInfo = useCustomerSelector(isShowInfo);
-  const user = useCustomerSelector(getUser);
-  const dispatch = useCustomerDispatch();
+  const showInfo = false;
+  const user = {} as any;
+  // const showInfo = useCustomerSelector(isShowInfo);
+  // const user = useCustomerSelector(getUser);
+  // const dispatch = useCustomerDispatch();
   const [isEdit, setIsEdit] = useState(false);
   const handleClose = () => {
-    dispatch(setIsShowInfo());
+    // dispatch(setIsShowInfo());
   };
 
   const methods = useForm<User>({
@@ -41,10 +40,10 @@ const MyInformationDialog = () => {
   } = methods;
 
   const onSubmit = async (data: User) => {
-    const res: any = await dispatch(updateUserInformation(data));
-    if (res.payload.data) {
-      handleEdit();
-    }
+    // const res: any = await dispatch(updateUserInformation(data));
+    // if (res.payload.data) {
+    //   handleEdit();
+    // }
   };
 
   const handleEdit = () => {

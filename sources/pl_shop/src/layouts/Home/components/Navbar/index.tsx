@@ -14,23 +14,21 @@ import { useNavigate } from 'react-router-dom';
 import { ParentContainer } from 'GlobalStyle';
 import Categories from '../Categories';
 import { useStyles } from './style';
-import { useCustomerDispatch, useCustomerSelector } from 'store/hooks';
-import { getCart } from 'store/selectors';
-import { searchByName } from 'store/Home';
 
 type Props = {};
 
-function Navbar({ }: Props) {
+function Navbar(props: Props) {
   const classes = useStyles();
   const navigate = useNavigate();
-  const cart = useCustomerSelector(getCart);
-  const dispatch = useCustomerDispatch();
+  // const cart = useCustomerSelector(getCart);
+  // const dispatch = useCustomerDispatch();
 
-  const cartQuantity = cart.reduce((prev: number, value: any) => prev + value.quantity, 0);
+  const cartQuantity = 0;
+  // const cartQuantity = cart.reduce((prev: number, value: any) => prev + value.quantity, 0);
 
   const debouncedSearch = useRef(
     debounce((value) => {
-      dispatch(searchByName(value));
+      // dispatch(searchByName(value));
       navigate(`/search`);
     }, 300)
   ).current;

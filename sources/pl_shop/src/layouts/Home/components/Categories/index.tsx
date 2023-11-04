@@ -4,15 +4,13 @@ import { Link as RouterLink } from 'react-router-dom';
 
 import categoriesStyles from './style.module.scss';
 import { Icon1, Icon2, Icon3, Icon4, Icon5 } from 'assets/images';
-import { useCustomerSelector } from 'store/hooks';
-import { getCategories } from 'store/selectors';
 
 const icons = [Icon1, Icon2, Icon3, Icon4, Icon5];
 
 type Props = {};
 
-function Categories({ }: Props) {
-  const categories = useCustomerSelector(getCategories);
+function Categories(props: Props) {
+  const categories = [] as any;
 
   return (
     <div className={categoriesStyles['nav-bar']}>

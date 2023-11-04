@@ -1,93 +1,37 @@
 import {
-  Container,
   Typography,
   Grid,
   TextField,
-  FormControl,
-  MenuItem,
-  Select,
-  InputLabel,
-  TextFieldProps,
   Button,
   InputAdornment,
+  useTheme,
 } from '@mui/material';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useState } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
-import { useNavigate } from 'react-router-dom';
-import { sub } from 'date-fns';
-
+import { Link, useNavigate } from 'react-router-dom';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { connect, ConnectedProps } from 'react-redux';
+
 import { useStyles } from './style';
-import { signUp } from 'store/Home';
-import { useCustomerDispatch } from 'store/hooks';
-import { ISignUp } from 'types';
+import { ISignUp, ISignUpReq } from 'types';
+import { schemaSignUp } from 'utils/schemas';
+import { AppState, AppDispatch } from 'store';
+import { register } from 'store/user/thunkApi';
+import { EStatusCode } from 'enums';
 
-export const digitsOnly = (value: any) => /^\d+$/.test(value);
-export const isCitizenIdentification = (value: any) => {
-  if (value.length !== 10 || value.length !== 13) {
-    return false;
-  }
-  return true;
-};
-
-const schema = yup.object().shape({
-  username: yup
-    .string()
-    .required('Đây là trường bắt buộc')
-    .min(6, 'Tên tài khoản phải có số ký tự lớn hơn 6'),
-  password: yup
-    .string()
-    .required('Đây là trường bắt buộc')
-    .min(6, 'Mật khẩu phải có số ký tự lớn hơn 6'),
-  passwordConfirmation: yup
-    .string()
-    .required('Đây là trường bắt buộc')
-    .min(6, 'Mật khẩu phải có số ký tự lớn hơn 6')
-    .oneOf([yup.ref('password'), null], 'Mật khẩu không trùng khớp'),
-  citizenIdentification: yup
-    .string()
-    .required('Đây là trường bắt buộc')
-    .length(12, 'CCCD phải là 12 số')
-    .test('Digits only', 'CCCD chỉ bao gồm ký tự số', digitsOnly),
-  firstName: yup.string().required('Đây là trường bắt buộc'),
-  lastName: yup.string().required('Đây là trường bắt buộc'),
-  gender: yup.number(),
-  dateOfBirth: yup.date().nullable(),
-  address: yup.string(),
-  email: yup
-    .string()
-    .required('Đây là trường bắt buộc')
-    .email('Email không đúng định dạng'),
-  phoneNumber: yup
-    .string()
-    .required('Đây là trường bắt buộc')
-    .length(10, 'Số điện thoại phải là 10 số')
-    .test('Digits only', 'Số điện thoại chỉ bao gồm ký tự số', digitsOnly),
-  taxCode: yup
-    .string()
-    .required('Đây là trường bắt buộc')
-    .min(10, 'Mã số thuế có ít nhất 10 kí tự')
-    .max(13, 'Mã số thuế có nhiều nhất 13 kí tự')
-    .test('Digits only', 'Mã số thuế chỉ bao gồm ký tự số', digitsOnly),
-});
-
-const SignUp = () => {
+const SignUp = ({ pRegister }: PropsFromStore) => {
   const classes = useStyles();
-  const dispatch = useCustomerDispatch();
   const navigate = useNavigate();
+  const theme = useTheme();
 
   const {
     register,
-    control,
     formState: { isValid, errors },
+    setError,
     handleSubmit,
   } = useForm<ISignUp>({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(schemaSignUp),
     mode: 'all',
   });
 
@@ -103,272 +47,175 @@ const SignUp = () => {
   };
 
   const onSubmit = async (data: ISignUp) => {
-    const res: any = await dispatch(signUp(data));
-    if (res.payload.data) {
-      navigate('/');
+    delete data.passwordConfirmation;
+    const res = await pRegister(data);
+    if (res.meta.requestStatus === 'fulfilled') {
+      navigate('/sign-in');
+    }
+    const payload: any = res.payload;
+    if (payload?.statusCode === EStatusCode.BAD_REQUEST && payload?.message) {
+      Object.entries(payload?.message).forEach(([key, value]) => {
+        setError(key as keyof ISignUp, { message: value } as any)
+      });
     }
   };
 
   return (
-    <Container className={classes['sign-up-container']}>
-      <Typography variant="h2">Đăng ký</Typography>
-      <form onSubmit={handleSubmit(onSubmit)} noValidate>
-        <Grid container spacing={6}>
-          <Grid item xs={4}>
-            <Typography variant="h4">Thông tin tài khoản</Typography>
-            <TextField
-              type="text"
-              variant="outlined"
-              label="Tên tài khoản"
-              color="secondary"
-              required
-              fullWidth
-              autoComplete="off"
-              inputProps={{
-                minLength: 6,
-                maxLength: 20,
-              }}
-              {...register('username')}
-              error={!!errors.username}
-              helperText={errors.username?.message ?? ''}
-            />
-            <TextField
-              type={showPassword ? 'type' : 'password'}
-              variant="outlined"
-              label="Mật khẩu"
-              color="secondary"
-              required
-              fullWidth
-              autoComplete="off"
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    {showPassword ? (
-                      <VisibilityOff onClick={handleShowPassword} />
-                    ) : (
-                      <Visibility onClick={handleShowPassword} />
-                    )}
-                  </InputAdornment>
-                ),
-              }}
-              inputProps={{
-                minLength: 6,
-                maxLength: 20,
-              }}
-              {...register('password')}
-              error={!!errors.password}
-              helperText={errors.password?.message ?? ''}
-            />
-            <TextField
-              type={showConfirmationPassword ? 'type' : 'password'}
-              variant="outlined"
-              label="Nhập lại mật khẩu"
-              color="secondary"
-              required
-              fullWidth
-              autoComplete="off"
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    {showConfirmationPassword ? (
-                      <VisibilityOff onClick={handleShowConfirmationPassword} />
-                    ) : (
-                      <Visibility onClick={handleShowConfirmationPassword} />
-                    )}
-                  </InputAdornment>
-                ),
-              }}
-              inputProps={{
-                minLength: 6,
-                maxLength: 20,
-              }}
-              {...register('passwordConfirmation')}
-              error={!!errors.passwordConfirmation}
-              helperText={errors.passwordConfirmation?.message ?? ''}
-            />
-          </Grid>
-          <Grid item xs={8}>
-            <Typography variant="h4">Thông tin khách hàng</Typography>
-            <Grid container spacing={2}>
-              <Grid item xs={4}>
-                <TextField
-                  type="text"
-                  variant="outlined"
-                  label="CCCD"
-                  color="secondary"
-                  required
-                  fullWidth
-                  autoComplete="off"
-                  inputProps={{
-                    maxLength: 12,
-                  }}
-                  {...register('citizenIdentification')}
-                  error={!!errors.citizenIdentification}
-                  helperText={errors.citizenIdentification?.message ?? ''}
-                />
-              </Grid>
-              <Grid item xs={4}>
-                <TextField
-                  type="text"
-                  variant="outlined"
-                  label="Họ"
-                  color="secondary"
-                  required
-                  fullWidth
-                  autoComplete="off"
-                  inputProps={{
-                    maxLength: 20,
-                  }}
-                  {...register('firstName')}
-                  error={!!errors.firstName}
-                  helperText={errors.firstName?.message ?? ''}
-                />
-              </Grid>
-              <Grid item xs={4}>
-                <TextField
-                  type="text"
-                  variant="outlined"
-                  label="Tên"
-                  color="secondary"
-                  required
-                  fullWidth
-                  autoComplete="off"
-                  inputProps={{
-                    maxLength: 10,
-                  }}
-                  {...register('lastName')}
-                  error={!!errors.lastName}
-                  helperText={errors.lastName?.message ?? ''}
-                />
-              </Grid>
-            </Grid>
-            <Grid container spacing={2}>
-              <Grid item xs={2}>
-                <FormControl fullWidth>
-                  <InputLabel id="select-gender" color="secondary">
-                    Giói tính
-                  </InputLabel>
-                  <Select
-                    labelId="select-gender"
-                    label="Giới tính"
-                    color="secondary"
-                    value={0}
-                    {...register('gender')}
-                  >
-                    <MenuItem value={0}>Nam</MenuItem>
-                    <MenuItem value={1}>Nữ</MenuItem>
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={3}>
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                  <Controller
-                    name="dateOfBirth"
-                    control={control}
-                    defaultValue={null}
-                    render={({ field }) => {
-                      return (
-                        <DatePicker
-                          label="Ngày sinh"
-                          inputFormat="dd/MM/yyyy"
-                          maxDate={sub(new Date(), { years: 18 })}
-                          {...field}
-                          renderInput={(
-                            params: JSX.IntrinsicAttributes & TextFieldProps
-                          ) => (
-                            <TextField
-                              InputLabelProps={{
-                                style: { color: 'var(--secondary-color)' },
-                              }}
-                              color="secondary"
-                              {...params}
-                            />
-                          )}
-                        />
-                      );
-                    }}
-                  />
-                </LocalizationProvider>
-              </Grid>
-            </Grid>
-            <Grid item xs={12}>
+    <Grid
+      container
+      className={classes['sign-up-container']}
+      justifyContent="center"
+    >
+      <Grid item xs={6} spacing={4}>
+        <Typography variant="h2" sx={{ marginBottom: 5 }}>Đăng ký</Typography>
+        <form onSubmit={handleSubmit(onSubmit)} noValidate>
+          <Grid container spacing={4}>
+            <Grid item xs={6}>
               <TextField
                 type="text"
                 variant="outlined"
-                label="Địa chỉ"
+                label="Họ"
                 color="secondary"
+                required
                 fullWidth
                 autoComplete="off"
-                {...register('address')}
+                inputProps={{
+                  maxLength: 50,
+                }}
+                {...register('firstName')}
+                error={!!errors.firstName}
+                helperText={errors.firstName?.message ?? ''}
               />
             </Grid>
-            <Grid container spacing={2}>
-              <Grid item xs={4}>
-                <TextField
-                  type="email"
-                  variant="outlined"
-                  label="Email"
-                  color="secondary"
-                  fullWidth
-                  required
-                  autoComplete="off"
-                  inputProps={{
-                    maxLength: 40,
-                  }}
-                  {...register('email')}
-                  error={!!errors.email}
-                  helperText={errors.email?.message ?? ''}
-                />
-              </Grid>
-              <Grid item xs={4}>
-                <TextField
-                  type="tel"
-                  variant="outlined"
-                  label="Số điện thoại"
-                  color="secondary"
-                  fullWidth
-                  required
-                  autoComplete="off"
-                  inputProps={{
-                    maxLength: 10,
-                  }}
-                  {...register('phoneNumber')}
-                  error={!!errors.phoneNumber}
-                  helperText={errors.phoneNumber?.message ?? ''}
-                />
-              </Grid>
-              <Grid item xs={4}>
-                <TextField
-                  type="text"
-                  variant="outlined"
-                  label="Mã số thuế"
-                  color="secondary"
-                  fullWidth
-                  required
-                  autoComplete="off"
-                  inputProps={{
-                    maxLength: 13,
-                    minLength: 10,
-                  }}
-                  {...register('taxCode')}
-                  error={!!errors.taxCode}
-                  helperText={errors.taxCode?.message ?? ''}
-                />
-              </Grid>
+            <Grid item xs={6}>
+              <TextField
+                type="text"
+                variant="outlined"
+                label="Tên"
+                color="secondary"
+                required
+                fullWidth
+                autoComplete="off"
+                inputProps={{
+                  maxLength: 50,
+                }}
+                {...register('lastName')}
+                error={!!errors.lastName}
+                helperText={errors.lastName?.message ?? ''}
+              />
             </Grid>
           </Grid>
-        </Grid>
-        <Button
-          type="submit"
-          color="primary"
-          variant="contained"
-          disabled={!isValid}
-        >
-          Đăng ký
-        </Button>
-      </form>
-    </Container>
+          <TextField
+            type="text"
+            variant="outlined"
+            label="Số điện thoại"
+            color="secondary"
+            fullWidth
+            required
+            autoComplete="off"
+            inputProps={{
+              maxLength: 10,
+            }}
+            {...register('phoneNumber')}
+            error={!!errors.phoneNumber}
+            helperText={errors.phoneNumber?.message ?? ''}
+          />
+          <TextField
+            type="email"
+            variant="outlined"
+            label="Email"
+            color="secondary"
+            required
+            fullWidth
+            autoComplete="off"
+            {...register('email')}
+            error={!!errors.email}
+            helperText={errors.email?.message ?? ''}
+          />
+          <TextField
+            type={showPassword ? 'type' : 'password'}
+            variant="outlined"
+            label="Mật khẩu"
+            color="secondary"
+            required
+            fullWidth
+            autoComplete="off"
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  {showPassword ? (
+                    <VisibilityOff onClick={handleShowPassword} />
+                  ) : (
+                    <Visibility onClick={handleShowPassword} />
+                  )}
+                </InputAdornment>
+              ),
+            }}
+            inputProps={{
+              minLength: 8,
+              maxLength: 20,
+            }}
+            {...register('password')}
+            error={!!errors.password}
+            helperText={errors.password?.message ?? ''}
+          />
+          <TextField
+            type={showConfirmationPassword ? 'type' : 'password'}
+            variant="outlined"
+            label="Nhập lại mật khẩu"
+            color="secondary"
+            required
+            fullWidth
+            autoComplete="off"
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  {showConfirmationPassword ? (
+                    <VisibilityOff onClick={handleShowConfirmationPassword} />
+                  ) : (
+                    <Visibility onClick={handleShowConfirmationPassword} />
+                  )}
+                </InputAdornment>
+              ),
+            }}
+            inputProps={{
+              minLength: 8,
+              maxLength: 20,
+            }}
+            {...register('passwordConfirmation')}
+            error={!!errors.passwordConfirmation}
+            helperText={errors.passwordConfirmation?.message ?? ''}
+          />
+          <Button
+            type="submit"
+            color="primary"
+            variant="contained"
+            disabled={!isValid}
+            fullWidth
+          >
+            Đăng ký
+          </Button>
+        </form>
+
+        <Typography variant="body1" sx={{ marginTop: 3 }}>
+          Đã có tài khoản?
+          <Link to='/sign-in' style={{ marginLeft: 5, color: theme.palette.info.main }}>Đăng nhập</Link>
+        </Typography>
+      </Grid>
+    </Grid>
   );
 };
 
-export default SignUp;
+const mapStateToProps = (state: AppState) => ({
+
+});
+
+const mapDispatchToProps = (dispatch: AppDispatch) => ({
+  pRegister: (params: ISignUpReq) => dispatch(register(params)),
+});
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type PropsFromStore = ConnectedProps<typeof connector>;
+
+export default connector(SignUp);
