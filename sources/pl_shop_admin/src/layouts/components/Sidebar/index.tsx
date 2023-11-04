@@ -13,6 +13,7 @@ import {
 } from '@mui/material';
 import { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
+
 import { useStyles } from './style';
 
 const adminDashboard = [
@@ -46,7 +47,7 @@ const shipperDashboard = [
   },
 ];
 
-const Sidebar = () => {
+export const Sidebar = () => {
   const classes = useStyles();
   const location = useLocation();
   const [dashboard, setDashboard] = useState([
@@ -98,5 +99,3 @@ const Sidebar = () => {
     </Drawer>
   );
 };
-
-export default Sidebar;

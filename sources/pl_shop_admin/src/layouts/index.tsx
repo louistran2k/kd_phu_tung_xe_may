@@ -1,10 +1,10 @@
 import { Container } from '@mui/material';
 import { ToastContainer } from 'react-toastify';
-import Header from './components/Header';
-import Sidebar from './components/Sidebar';
+
 import { useStyles } from './style';
 
 import 'react-toastify/dist/ReactToastify.css';
+import { Header, Sidebar } from './components';
 
 type Props = {
   children: JSX.Element;

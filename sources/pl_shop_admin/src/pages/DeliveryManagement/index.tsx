@@ -1,19 +1,15 @@
 import { AppBar, Container, Tab, Tabs } from '@mui/material';
-import { SyntheticEvent, useEffect, useState } from 'react';
+import { SyntheticEvent, useEffect } from 'react';
 import SwipeableViews from 'react-swipeable-views';
-import { setIsShowDetail, setStatus } from 'redux/customerOrder/slice';
-import { useAppDispatch, useAppSelector } from 'redux/hooks';
-import { getIsShowDetail, getStatus } from 'redux/customerOrder/selectors';
-import {
-  CustomerOrderStatus,
-  GetDeliveryRequest,
-} from 'types/customerOrder.type';
+
 import { useStyles } from '../OrderManagement/style';
-import OrderDetail from 'pages/OrderManagement/components/OrderDetail';
-import TableOrder from './components/TableOrder';
-import { getDeliveryAsync } from 'redux/customerOrder/thunkActions';
-import { getShipper } from 'redux/user/selectors';
-import { getStaffsForDeliveryAsync } from 'redux/staff/thunkActions';
+import { getStatus, getIsShowDetail, setStatus, getDeliveryAsync, setIsShowDetail } from 'redux/customerOrder';
+import { useAppDispatch, useAppSelector } from 'redux/hooks';
+import { getStaffsForDeliveryAsync } from 'redux/staff';
+import { getShipper } from 'redux/user';
+import { CustomerOrderStatus, GetDeliveryRequest } from 'types';
+import { TableOrder } from './components';
+import { OrderDetail } from 'pages/OrderManagement/components';
 
 const DeliveryManagement = () => {
   const classes = useStyles();
@@ -33,7 +29,7 @@ const DeliveryManagement = () => {
     (async () => {
       await dispatch(getStaffsForDeliveryAsync());
     })();
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     const req: GetDeliveryRequest = {
@@ -43,7 +39,7 @@ const DeliveryManagement = () => {
     (async () => {
       dispatch(getDeliveryAsync(req));
     })();
-  }, [status]);
+  }, [status, dispatch, shipper.id]);
 
   return (
     <>

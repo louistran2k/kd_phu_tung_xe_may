@@ -1,8 +1,9 @@
+import { ToastContainer } from 'react-toastify';
 import { Outlet } from 'react-router-dom';
+
 import { useStyles } from './style';
 import { LogoImg } from 'assets/images';
 import 'react-toastify/dist/ReactToastify.css';
-import { ToastContainer } from 'react-toastify';
 
 function Authentication() {
   const classes = useStyles();
@@ -19,7 +20,7 @@ function Authentication() {
       />
       <div className={classes.authentication}>
         <div className={classes['login-form']}>
-          <img src={LogoImg} />
+          <img src={LogoImg} alt='' />
           <Outlet />
         </div>
       </div>

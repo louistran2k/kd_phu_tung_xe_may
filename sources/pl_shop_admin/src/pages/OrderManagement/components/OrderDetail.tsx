@@ -11,18 +11,18 @@ import {
 } from '@mui/material';
 import { format } from 'date-fns';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-import { getDetail } from 'redux/customerOrder/selectors';
-import { convertCurrency } from 'redux/customerOrder/slice';
-import { useAppSelector } from 'redux/hooks';
-import { CustomerOrderStatus } from 'types/customerOrder.type';
+
 import { useStyles } from '../style';
+import { getDetail, convertCurrency } from 'redux/customerOrder';
+import { useAppSelector } from 'redux/hooks';
+import { CustomerOrderStatus } from 'types';
 
 type Props = {
   openViewDetail: boolean;
   handleClose: () => void;
 };
 
-const OrderDetail = ({ openViewDetail, handleClose }: Props) => {
+export const OrderDetail = ({ openViewDetail, handleClose }: Props) => {
   const classes = useStyles();
   const orderDetail = useAppSelector(getDetail);
 
@@ -46,9 +46,8 @@ const OrderDetail = ({ openViewDetail, handleClose }: Props) => {
       </IconButton>
       <Typography variant="h4">Chi tiết đơn hàng</Typography>
       <Typography>{`Mã đơn đặt: ${orderDetail.id}`}</Typography>
-      <Typography>{`Trạng thái đơn hàng: ${
-        CustomerOrderStatus[orderDetail.status]
-      }`}</Typography>
+      <Typography>{`Trạng thái đơn hàng: ${CustomerOrderStatus[orderDetail.status]
+        }`}</Typography>
       {orderDetail.approvalStaffId && (
         <Typography>{`Nhân viên duyệt: ${orderDetail.approvalStaffName}`}</Typography>
       )}
@@ -134,5 +133,3 @@ const OrderDetail = ({ openViewDetail, handleClose }: Props) => {
     </Dialog>
   );
 };
-
-export default OrderDetail;

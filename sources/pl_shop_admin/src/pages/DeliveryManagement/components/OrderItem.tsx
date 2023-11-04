@@ -8,22 +8,18 @@ import {
   Tooltip,
 } from '@mui/material';
 import { format } from 'date-fns';
-import { setIsShowDetail } from 'redux/customerOrder/slice';
-import {
-  deliveredAsync,
-  getOrderDetailShipperAsync,
-} from 'redux/customerOrder/thunkActions';
-import { useAppDispatch, useAppSelector } from 'redux/hooks';
-import { getStatus } from 'redux/customerOrder/selectors';
-import { CustomerOrder, CustomerOrderStatus } from 'types/customerOrder.type';
 import Swal from 'sweetalert2';
+
+import { getStatus, setIsShowDetail, getOrderDetailShipperAsync, deliveredAsync } from 'redux/customerOrder';
+import { useAppDispatch, useAppSelector } from 'redux/hooks';
 import { confirmButtonColor, cancelButtonColor } from 'themes/HomeTheme';
+import { CustomerOrder, CustomerOrderStatus } from 'types';
 
 type Props = {
   item: CustomerOrder;
 };
 
-const OrderItem = ({ item }: Props) => {
+export const OrderItem = ({ item }: Props) => {
   const theme = useTheme();
   const dispatch = useAppDispatch();
   const status = useAppSelector(getStatus);
@@ -83,5 +79,3 @@ const OrderItem = ({ item }: Props) => {
     </TableRow>
   );
 };
-
-export default OrderItem;

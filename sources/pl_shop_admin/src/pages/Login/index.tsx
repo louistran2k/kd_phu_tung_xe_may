@@ -5,16 +5,16 @@ import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
   Typography,
-  Grid,
   TextField,
   Button,
   InputAdornment,
 } from '@mui/material';
-import { useAppSelector, useAppDispatch } from 'redux/hooks';
 import { Person, Https, Visibility, VisibilityOff } from '@mui/icons-material';
-import { LoginRequest } from 'types/user.type';
+
 import { useStyles } from './style';
-import { adminSignIn, shipperSignIn } from 'redux/user/thunkActions';
+import { useAppDispatch } from 'redux/hooks';
+import { shipperSignIn, adminSignIn } from 'redux/user';
+import { LoginRequest } from 'types';
 
 const schema = yup.object().shape({
   username: yup.string().label('Username').required(),

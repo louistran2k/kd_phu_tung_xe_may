@@ -1,22 +1,18 @@
 import {
   AppBar,
   Container,
-  Dialog,
-  DialogTitle,
   Tab,
   Tabs,
 } from '@mui/material';
-import { SyntheticEvent, useEffect, useState } from 'react';
+import { SyntheticEvent, useEffect } from 'react';
 import SwipeableViews from 'react-swipeable-views';
-import { setIsShowDetail, setStatus } from 'redux/customerOrder/slice';
-import { getCustomerOrdersAsync } from 'redux/customerOrder/thunkActions';
-import { useAppDispatch, useAppSelector } from 'redux/hooks';
-import { getCustomerOrders, getIsShowDetail, getStatus } from 'redux/customerOrder/selectors';
-import { getStaffsAsync } from 'redux/staff/thunkActions';
-import { CustomerOrderStatus } from 'types/customerOrder.type';
-import TableOrder from './components/TableOrder';
+
 import { useStyles } from './style';
-import OrderDetail from './components/OrderDetail';
+import { getStatus, getIsShowDetail, setStatus, getCustomerOrdersAsync, setIsShowDetail } from 'redux/customerOrder';
+import { useAppDispatch, useAppSelector } from 'redux/hooks';
+import { getStaffsAsync } from 'redux/staff';
+import { CustomerOrderStatus } from 'types';
+import { TableOrder, OrderDetail } from './components';
 
 const OrderManagement = () => {
   const classes = useStyles();
@@ -36,7 +32,7 @@ const OrderManagement = () => {
       await dispatch(getStaffsAsync());
       dispatch(getCustomerOrdersAsync(status));
     })()
-  }, [status]);
+  }, [status, dispatch]);
 
   return (
     <>

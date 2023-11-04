@@ -1,6 +1,6 @@
 const ProductsManagement = () => {
   return (
-      <div>ProductsManagement</div>
+    <div>ProductsManagement</div>
   )
 }
 

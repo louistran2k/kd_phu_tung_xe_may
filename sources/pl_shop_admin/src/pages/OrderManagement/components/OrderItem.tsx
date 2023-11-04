@@ -12,32 +12,20 @@ import {
 } from '@mui/material';
 import { format } from 'date-fns';
 import { useState } from 'react';
-import { toast } from 'react-toastify';
-import { convertCurrency, setIsShowDetail } from 'redux/customerOrder/slice';
-import {
-  approvalCustomerOrderAsync,
-  cancelledAsync,
-  changeDeliveryStaffAsync,
-  deliveredAsync,
-  getOrderDetailAsync,
-} from 'redux/customerOrder/thunkActions';
-import { useAppDispatch, useAppSelector } from 'redux/hooks';
-import { getStaffs, getStatus } from 'redux/customerOrder/selectors';
-import {
-  UpdateRequest,
-  CustomerOrder,
-  CustomerOrderStatus,
-  CustomerOrderDto,
-} from 'types/customerOrder.type';
-import { getAdmin } from 'redux/user/selectors';
 import Swal from 'sweetalert2';
+
+import { getStaffs, getStatus, setIsShowDetail, getOrderDetailAsync, approvalCustomerOrderAsync, deliveredAsync, cancelledAsync, changeDeliveryStaffAsync, convertCurrency } from 'redux/customerOrder';
+import { useAppDispatch, useAppSelector } from 'redux/hooks';
+import { getAdmin } from 'redux/user';
+
 import { confirmButtonColor, cancelButtonColor } from 'themes/HomeTheme';
+import { CustomerOrderDto, CustomerOrderStatus, UpdateRequest } from 'types';
 
 type Props = {
   item: CustomerOrderDto;
 };
 
-const OrderItem = ({ item }: Props) => {
+export const OrderItem = ({ item }: Props) => {
   const theme = useTheme();
   const dispatch = useAppDispatch();
   const staffs = useAppSelector(getStaffs);
@@ -144,21 +132,21 @@ const OrderItem = ({ item }: Props) => {
       )}
       {(status === CustomerOrderStatus.WAIT_CONFIRM ||
         status === CustomerOrderStatus.COMPLETED) && (
-        <TableCell>
-          <Typography variant="body1">
-            {format(new Date(item.createAt), 'dd/MM/yyyy')}
-          </Typography>
-        </TableCell>
-      )}
+          <TableCell>
+            <Typography variant="body1">
+              {format(new Date(item.createAt), 'dd/MM/yyyy')}
+            </Typography>
+          </TableCell>
+        )}
       {(status === CustomerOrderStatus.WAIT_CONFIRM ||
         status === CustomerOrderStatus.DELIVERING ||
         status === CustomerOrderStatus.COMPLETED) && (
-        <TableCell>
-          <Typography variant="body1">
-            {format(new Date(item.deliveryDate), 'dd/MM/yyyy')}
-          </Typography>
-        </TableCell>
-      )}
+          <TableCell>
+            <Typography variant="body1">
+              {format(new Date(item.deliveryDate), 'dd/MM/yyyy')}
+            </Typography>
+          </TableCell>
+        )}
       <TableCell size="small">
         <Typography variant="body1">
           {convertCurrency(item.totalPrice)}
@@ -178,29 +166,29 @@ const OrderItem = ({ item }: Props) => {
       )}
       {(status === CustomerOrderStatus.WAIT_CONFIRM ||
         status === CustomerOrderStatus.DELIVERING) && (
-        <TableCell>
-          <Select value={staff} onChange={handleChange}>
-            {staffs
-              .filter((item) => item.roleId === 'NV')
-              .map((item) => (
-                <MenuItem
-                  key={item.id}
-                  value={item.id}
-                >{`${item.firstName} ${item.lastName}`}</MenuItem>
-              ))}
-          </Select>
-          {status === CustomerOrderStatus.DELIVERING && (
-            <IconButton
-              onClick={handleChangeDeliveryStaff}
-              disabled={staff === item.deliveryStaffId}
-            >
-              <Tooltip title="Đổi người giao hàng">
-                <CheckCircle style={{ color: theme.palette.success.main }} />
-              </Tooltip>
-            </IconButton>
-          )}
-        </TableCell>
-      )}
+          <TableCell>
+            <Select value={staff} onChange={handleChange}>
+              {staffs
+                .filter((item) => item.roleId === 'NV')
+                .map((item) => (
+                  <MenuItem
+                    key={item.id}
+                    value={item.id}
+                  >{`${item.firstName} ${item.lastName}`}</MenuItem>
+                ))}
+            </Select>
+            {status === CustomerOrderStatus.DELIVERING && (
+              <IconButton
+                onClick={handleChangeDeliveryStaff}
+                disabled={staff === item.deliveryStaffId}
+              >
+                <Tooltip title="Đổi người giao hàng">
+                  <CheckCircle style={{ color: theme.palette.success.main }} />
+                </Tooltip>
+              </IconButton>
+            )}
+          </TableCell>
+        )}
       <TableCell size="small">
         <IconButton onClick={handleViewOrderDetail}>
           <Tooltip title="Xem chi tiết đơn hàng">
@@ -209,35 +197,31 @@ const OrderItem = ({ item }: Props) => {
         </IconButton>
         {(status === CustomerOrderStatus.WAIT_CONFIRM ||
           status === CustomerOrderStatus.DELIVERING) && (
-          <IconButton onClick={handleUpdate} disabled={staff === ''}>
-            <Tooltip
-              title={`${
-                status === CustomerOrderStatus.WAIT_CONFIRM
+            <IconButton onClick={handleUpdate} disabled={staff === ''}>
+              <Tooltip
+                title={`${status === CustomerOrderStatus.WAIT_CONFIRM
                   ? 'Xác nhận đơn hàng'
                   : 'Giao thành công'
-              }`}
-            >
-              <CheckCircle style={{ color: theme.palette.success.main }} />
-            </Tooltip>
-          </IconButton>
-        )}
+                  }`}
+              >
+                <CheckCircle style={{ color: theme.palette.success.main }} />
+              </Tooltip>
+            </IconButton>
+          )}
         {(status === CustomerOrderStatus.WAIT_CONFIRM ||
           status === CustomerOrderStatus.DELIVERING) && (
-          <IconButton onClick={handleCancel}>
-            <Tooltip
-              title={`${
-                status === CustomerOrderStatus.WAIT_CONFIRM
+            <IconButton onClick={handleCancel}>
+              <Tooltip
+                title={`${status === CustomerOrderStatus.WAIT_CONFIRM
                   ? 'Hủy đơn hàng'
                   : 'Giao không thành công'
-              }`}
-            >
-              <Delete style={{ color: theme.palette.error.main }} />
-            </Tooltip>
-          </IconButton>
-        )}
+                  }`}
+              >
+                <Delete style={{ color: theme.palette.error.main }} />
+              </Tooltip>
+            </IconButton>
+          )}
       </TableCell>
     </TableRow>
   );
 };
-
-export default OrderItem;

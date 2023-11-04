@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
 import { User, UserState } from 'types/user.type';
 import {
@@ -32,7 +32,7 @@ export const initialState: UserState = {
   shipperAccessToken:
     getAccessToken(ACCESS_TOKEN_KEY.SHIPPER) !== null
       ? JSON.parse(getAccessToken(ACCESS_TOKEN_KEY.SHIPPER) as string)
-          .accessToken
+        .accessToken
       : null,
   shipper:
     getAccessToken(ACCESS_TOKEN_KEY.SHIPPER) !== null

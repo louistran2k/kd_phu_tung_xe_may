@@ -5,11 +5,9 @@ import {
   getStaffsForDeliveryAsync,
 } from 'redux/staff/thunkActions';
 import {
-  CustomerOrder,
   CustomerOrderDto,
   CustomerOrderState,
   CustomerOrderStatus,
-  DeliveryStatus,
 } from 'types/customerOrder.type';
 import { Staff } from 'types/staff.type';
 import {

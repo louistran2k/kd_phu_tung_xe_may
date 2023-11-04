@@ -8,16 +8,16 @@ import {
   Menu,
   MenuItem,
 } from '@mui/material';
-import { LogoImg } from 'assets/images';
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from 'redux/hooks';
-import { getAdmin, getShipper } from 'redux/user/selectors';
-import { adminLogout, shipperLogout, userInit } from 'redux/user/slice';
-import { User } from 'types/user.type';
-import { useStyles } from '../../style';
 
-const Header = () => {
+import { LogoImg } from 'assets/images';
+import { useStyles } from '../../style';
+import { useAppSelector, useAppDispatch } from 'redux/hooks';
+import { getAdmin, getShipper, userInit, shipperLogout, adminLogout } from 'redux/user';
+import { User } from 'types';
+
+export const Header = () => {
   const classes = useStyles();
   const admin = useAppSelector(getAdmin);
   const shipper = useAppSelector(getShipper);
@@ -51,7 +51,7 @@ const Header = () => {
     } else {
       setUser(admin);
     }
-  }, [location.pathname]);
+  }, [location.pathname, shipper, admin]);
 
   return (
     <AppBar position="fixed" className={classes.header}>
@@ -86,5 +86,3 @@ const Header = () => {
     </AppBar>
   );
 };
-
-export default Header;

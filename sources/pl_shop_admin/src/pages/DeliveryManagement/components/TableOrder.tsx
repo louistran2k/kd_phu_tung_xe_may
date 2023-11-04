@@ -1,6 +1,4 @@
 import {
-  Dialog,
-  DialogTitle,
   Table,
   TableBody,
   TableCell,
@@ -9,14 +7,12 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-import { useState } from 'react';
+import { getCustomerOrders } from 'redux/customerOrder';
 import { useAppSelector } from 'redux/hooks';
-import { getCustomerOrders, getStatus } from 'redux/customerOrder/selectors';
-import OrderItem from './OrderItem';
+import { OrderItem } from './OrderItem';
 
-const TableOrder = () => {
+export const TableOrder = () => {
   const list = useAppSelector(getCustomerOrders);
-  const status = useAppSelector(getStatus);
 
   return (
     <TableContainer>
@@ -50,5 +46,3 @@ const TableOrder = () => {
     </TableContainer>
   );
 };
-
-export default TableOrder;

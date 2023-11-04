@@ -21,12 +21,13 @@ import {
 } from '@mui/material';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { useAppSelector } from 'redux/hooks';
-import { axiosClientAdmin } from 'api/axiosClient';
-import { convertCurrency } from 'redux/customerOrder/slice';
-import { Revenue } from 'types/customerOrder.type';
-import { getAdmin } from 'redux/user/selectors';
+
 import { useStyles } from './style';
+import { axiosClientAdmin } from 'api/axiosClient';
+import { convertCurrency } from 'redux/customerOrder';
+import { useAppSelector } from 'redux/hooks';
+import { getAdmin } from 'redux/user';
+import { Revenue } from 'types';
 
 export interface CustomTimeType {
   startDate: Date | null;
@@ -100,7 +101,7 @@ const RevenueStatistics = () => {
         throw new Error(String(error));
       }
     })();
-  }, []);
+  }, [user.firstName, user.lastName]);
 
   const calcTotal = () =>
     revenue.reduce((prev, current) => prev + current.revenue, 0);
@@ -255,9 +256,8 @@ const RevenueStatistics = () => {
             </Grid>
           </Grid>
           <div className={classes.sign}>
-            <Typography>{`TP.HCM, ngày ${new Date().getDate()} tháng ${
-              new Date().getMonth() + 1
-            } năm ${new Date().getFullYear()}`}</Typography>
+            <Typography>{`TP.HCM, ngày ${new Date().getDate()} tháng ${new Date().getMonth() + 1
+              } năm ${new Date().getFullYear()}`}</Typography>
             <Typography>Người lập</Typography>
             <br />
             <br />
